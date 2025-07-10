@@ -16,7 +16,7 @@ require('dotenv').config()
 app.use(stripeWebhookRoutes)
 
 app.use(express.json())
-app.use(cors({ credentials: true, origin: ['http://localhost:3000', 'https://middler.com', 'https://admin.middler.com', 'https://middler-test-production.up.railway.app'] }))
+app.use(cors({ credentials: true, origin: ['http://localhost:3000', 'https://middler.com', 'https://admin.middler.com', 'https://middler-murex.vercel.app', 'https://middler-test-production.up.railway.app'] }))
 app.options('*', cors()); // Handle preflight requests
 app.use((err, req, res, next) => {
   console.error(err);
