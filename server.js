@@ -40,8 +40,7 @@ app.get('/health', (req, res) => {
 })
 
 mongoose.connect(
-  // `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_URL}${process.env.DATABASE_NAME}?retryWrites=true&w=majority&appName=${process.env.DATABASE_APP_NAME}`,
-  "mongodb+srv://nabeelmuhammad244:UeARL0lEV5BPZept@middler.rhccz8n.mongodb.net/middler",
+  `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_URL}${process.env.DATABASE_NAME}?retryWrites=true&w=majority&appName=${process.env.DATABASE_APP_NAME}`,
   {
     family: 4
   },
