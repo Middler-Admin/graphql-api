@@ -11,7 +11,7 @@ exports.thankYouForSubscribing = (email) => {
       },
       Body: {
         Text: {
-          Data: 'Thanks for submitting your email on Middler! Enjoy 10% off on your order from Five Star Painter.',
+          Data: 'Thanks for submitting your email on Middler! Enjoy 10% off on your order from Five Star Painting.',
           Charset: 'UTF-8',
         },
         Html: {
@@ -65,7 +65,7 @@ exports.thankYouForSubscribing = (email) => {
                   Thanks for submitting your email on Middler!
                 </div>
                 <div class="email-body">
-                  <p>Enjoy 10% off on your order from Five Star Painter.</p>
+                  <p>Enjoy 10% off on your order from Five Star Painting.</p>
                 </div>
                 <div class="footer">
                   <p>If you have any questions, feel free to contact us at <a href="mailto:support@middler.com">support@middler.com</a>.</p>
