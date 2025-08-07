@@ -14,6 +14,8 @@ const User            = require('../models/user')
 const Estimate        = require('../models/client')
 const Code            = require('../models/promotions')
 
+const SubscribedUser = require('../models/subscribedUser')
+
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: () => ({

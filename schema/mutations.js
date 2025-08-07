@@ -1,6 +1,18 @@
 const graphql = require('graphql');
+const { GraphQLError } = require('graphql')
 const { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInt, GraphQLBoolean } = graphql;
 const jwtMethod = require('jsonwebtoken')
+const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses")
+
+const config = {
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  },
+  region: process.env.AWS_REGION
+}
+
+const ses = new SESClient(config)
 
 //// TYPES
 const UserType                        = require('../types/userType')
@@ -17,7 +29,9 @@ const User                      = require('../models/user')
 const Client                    = require('../models/client')
 const Payment                   = require('../models/payments')
 const Promotion                 = require('../models/promotions')
-const Time                      = require('../models/time')
+const Time                      = require('../models/time');
+const SubscribedUser = require('../models/subscribedUser');
+const { thankYouForSubscribing } = require('../templates/thankYou');
 
 const mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -728,7 +742,47 @@ const mutation = new GraphQLObjectType({
         return Client.applyGiftCard( estimateID, where, why )
         
       }
+    },
+
+  subscribeUser: {
+      type: GraphQLString,
+      args: {
+        email: { type: GraphQLString }
+      },
+      async resolve(parentValue, { email }) {
+        try {
+          // Check if the user is already subscribed
+          const existingUser = await SubscribedUser.findOne({ email });
+
+          // if (existingUser) {
+          //   throw new GraphQLError('This email is already subscribed.', {
+          //     extensions: { code: 'FORBIDDEN' }
+          //   });
+          // }
+
+          // Create a new subscription
+          const newSubscription = new SubscribedUser({ email });
+          await newSubscription.save();
+
+
+            const params = thankYouForSubscribing(email); // Your email template function
+          const command = new SendEmailCommand(params);
+          const response = await ses.send(command);
+
+          console.log('Subscription confirmation email sent:', response);
+
+          return `Discount email sent to your email`;
+        } catch (error) {
+          console.log('ERROR', error);
+          throw new GraphQLError('Error subscribing user.', {
+            extensions: { code: 'INTERNAL_SERVER_ERROR' }
+          });
+        }
+      }
     }
+
+    ///// end mutation ///////
+
   }
 })
 
