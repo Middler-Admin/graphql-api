@@ -51,30 +51,28 @@ exports.saveEstimate = (
                 <p style="margin: 0; font-weight: bold;">Interior Detail</p>
                 <p style="margin: 0;">${interiorDetail || 'Unknown'}</p><br/>
                 <p style="margin: 0; font-weight: bold;">Extras</p>
-                <p style="margin: 0;">${
-                  Array.isArray(interiorIndividualItems) &&
-                  interiorIndividualItems.length > 0
-                    ? interiorIndividualItems
-                        .map((i) => `${i.title} - ${i.price}`)
-                        .join(', ')
-                    : '—'
-                }
+                <p style="margin: 0;">${Array.isArray(interiorIndividualItems) &&
+        interiorIndividualItems.length > 0
+        ? interiorIndividualItems
+          .map((i) => `${i.title} - ${i.price}`)
+          .join(', ')
+        : '—'
+      }
               </p>
               </td>
               <td style="padding: 15px; width: 50%; vertical-align: top;">
                 <p style="margin: 0; font-weight: bold;">Interior Condition</p>
                 <p style="margin: 0;">${interiorCondition || 'Unknown'}</p><br/>
                 <p style="margin: 0; font-weight: bold;">Items to be Painted</p>
-                <p style="margin: 0;">${
-                  Array.isArray(interiorItems) && interiorItems.length
-                    ? interiorItems
-                        .map(
-                          (i) =>
-                            `<span style="display: inline-block; background-color: #eeeeee; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin-right: 5px;">${i.title}</span>`
-                        )
-                        .join('')
-                    : '—'
-                }
+                <p style="margin: 0;">${Array.isArray(interiorItems) && interiorItems.length
+        ? interiorItems
+          .map(
+            (i) =>
+              `<span style="display: inline-block; background-color: #eeeeee; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin-right: 5px;">${i.title}</span>`
+          )
+          .join('')
+        : '—'
+      }
                 </p>
               </td>
             </tr>
@@ -128,14 +126,13 @@ exports.saveEstimate = (
                 <p style="margin: 0; font-weight: bold;">Exterior Detail</p>
                 <p style="margin: 0;">${exteriorDetail || 'Unknown'}</p><br/>
                 <p style="margin: 0; font-weight: bold;">Extras</p>
-                <p style="margin: 0;">${
-                  Array.isArray(exteriorIndividualItems) &&
-                  exteriorIndividualItems.length
-                    ? exteriorIndividualItems
-                        .map((i) => `${i.title} - ${i.price}`)
-                        .join(', ')
-                    : '—'
-                }
+                <p style="margin: 0;">${Array.isArray(exteriorIndividualItems) &&
+        exteriorIndividualItems.length
+        ? exteriorIndividualItems
+          .map((i) => `${i.title} - ${i.price}`)
+          .join(', ')
+        : '—'
+      }
               </p>
               </td>
               <td style="padding: 15px; width: 50%; vertical-align: top;">
@@ -143,16 +140,15 @@ exports.saveEstimate = (
                 <p style="margin: 0;">${exteriorCondition || 'Unknown'}</p><br/>
                 <p style="margin: 0; font-weight: bold;">Items to be Painted</p>
                 <p style="margin: 0;">
-                  ${
-                    Array.isArray(exteriorItems) && exteriorItems.length
-                      ? exteriorItems
-                          .map(
-                            (i) =>
-                              `<span style="display: inline-block; background-color: #eeeeee; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin-right: 5px;">${i.title}</span>`
-                          )
-                          .join('')
-                      : '—'
-                  }                  
+                  ${Array.isArray(exteriorItems) && exteriorItems.length
+        ? exteriorItems
+          .map(
+            (i) =>
+              `<span style="display: inline-block; background-color: #eeeeee; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin-right: 5px;">${i.title}</span>`
+          )
+          .join('')
+        : '—'
+      }
                 </p>
               </td>
             </tr>
@@ -257,6 +253,15 @@ exports.saveEstimate = (
                       ${interiorSectionHtml}
                       ${cabinetSectionHtml}
                       ${exteriorSectionHtml}
+
+                      <tr>
+                       <td colspan="2" style="padding: 15px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+                         <p style="margin: 0; font-weight: bold; font-size: 16px; color: #111827;">Terms</p>
+                         <p style="margin: 6px 0 0 0; font-size: 14px; color: #374151;">
+                           Paint Brand: ${paintBrand ? String(paintBrand).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Unknown'}
+                         </p>
+                       </td>
+                     </tr>
 
                       <tr><td align="center" style="padding:20px;font-size:12px;color:#999">© 2025 Middler. All rights reserved.</td></tr>
                     </table>
