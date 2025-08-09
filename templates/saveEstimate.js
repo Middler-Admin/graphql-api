@@ -263,7 +263,7 @@ exports.saveEstimate = (
                               </td>
                             </tr>
                             <tr>
-                              <td style="padding: 15px; width: 50%; vertical-align: top;">
+                              <td style="padding: 15px; width: 100%; vertical-align: top;">
                                 <p style="margin: 0; font-weight: bold;">Paint Brand:</p>
                                 <p style="margin: 0;">${paintBrand ? String(paintBrand).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Unknown'}</p><br/>
                               </td>
