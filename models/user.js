@@ -8,7 +8,7 @@ const aws = require('aws-sdk')
 aws.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION  
+  region: process.env.AWS_REGION
 });
 
 const S3 = new aws.S3();
@@ -37,28 +37,28 @@ const { generateRandomNumber, generatePassword, generateSixDigitPin, generateEig
 const { calculateInteriorEstimate, calculateExteriorEstimate, calculateCabinetsEstimate, calculateInteriorGallonsCost, calculateExteriorGallonsCost, calculateCabinetsGallonsCost, totalEstimate, totalEstimateAdjusted, totalEstimateAdjustedNewEstimate } = require('../helpers/calculation')
 
 //// TEMPLATES
-const { verifyEmail }               = require('../templates/verifyEmail')
-const { verifyEmailTwo }            = require('../templates/verifyEmailTwo')
-const { tempPassword }              = require('../templates/tempPassword')
-const { forgotPassword }            = require('../templates/forgotPassword')
-const { contactMiddler }            = require('../templates/contactMiddler')
-const { sendEstimateShort }         = require('../templates/sendEstimateShort')
-const { sendEstimateMinimal }       = require('../templates/sendEstimateMinimal')
-const { sendEstimateQuick }         = require('../templates/sendEstimateQuick')
-const { tempPasswordTwo }           = require('../templates/tempPasswordTwo')
+const { verifyEmail } = require('../templates/verifyEmail')
+const { verifyEmailTwo } = require('../templates/verifyEmailTwo')
+const { tempPassword } = require('../templates/tempPassword')
+const { forgotPassword } = require('../templates/forgotPassword')
+const { contactMiddler } = require('../templates/contactMiddler')
+const { sendEstimateShort } = require('../templates/sendEstimateShort')
+const { sendEstimateMinimal } = require('../templates/sendEstimateMinimal')
+const { sendEstimateQuick } = require('../templates/sendEstimateQuick')
+const { tempPasswordTwo } = require('../templates/tempPasswordTwo')
 const { noPasswordEmailVerification } = require('../templates/noPasswordEmailVerification')
-const { sendEstimateClient }        = require('../templates/sendEstimateClient')
-const { sendEstimateDetailed }      = require('../templates/sendEstimateDetailed')
-const { saveEstimate }              = require('../templates/saveEstimate')
+const { sendEstimateClient } = require('../templates/sendEstimateClient')
+const { sendEstimateDetailed } = require('../templates/sendEstimateDetailed')
+const { saveEstimate } = require('../templates/saveEstimate')
 
 //// DATA MODELS
 const Client = require('../models/client')
 
 const UserSchema = new Schema({
-  firstName: { 
+  firstName: {
     type: String,
     default: ''
-  }, 
+  },
   lastName: {
     type: String,
     default: ''
@@ -67,7 +67,7 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  password: { 
+  password: {
     type: String,
   },
   membershipID: {
@@ -105,7 +105,7 @@ const UserSchema = new Schema({
     type: String,
     default: ''
   },
-  estimatorName: { 
+  estimatorName: {
     type: String,
     default: ''
   },
@@ -140,11 +140,11 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false
   },
-  customerID: { 
+  customerID: {
     type: String,
     default: ''
   },
-  subscriptionID: { 
+  subscriptionID: {
     type: String,
     default: ''
   },
@@ -184,27 +184,27 @@ const UserSchema = new Schema({
   }
 }, { versionKey: 'version' });
 
-UserSchema.pre('save', function(next){
+UserSchema.pre('save', function (next) {
   const user = this;
-  if(!user.isModified('password')) return next()
-  bcrypt.hash(user.password, SALT_ROUNDS, function(err, hash){
-      if(err) return next(err)
-      user.password = hash
-      next()
+  if (!user.isModified('password')) return next()
+  bcrypt.hash(user.password, SALT_ROUNDS, function (err, hash) {
+    if (err) return next(err)
+    user.password = hash
+    next()
   })
 })
 
-UserSchema.methods.comparePassword = function(tryPassword, cb){
+UserSchema.methods.comparePassword = function (tryPassword, cb) {
   bcrypt.compare(tryPassword, this.password, cb)
 }
 
-UserSchema.statics.signup = async function( firstName, lastName, email, password ){
+UserSchema.statics.signup = async function (firstName, lastName, email, password) {
 
-  let newMembershipID     = generateRandomNumber()
-  let pin                 = generateSixDigitPin()
-  let expirationDate      = new Date()
+  let newMembershipID = generateRandomNumber()
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
-  
+
   let object = new Object({
     firstName: firstName,
     lastName: lastName,
@@ -214,9 +214,9 @@ UserSchema.statics.signup = async function( firstName, lastName, email, password
     verificationCode: pin,
     codeExpiration: expirationDate.toISOString()
   })
-  
-  for(let key in object){ if(!object[key]) delete object[key] }
-  
+
+  for (let key in object) { if (!object[key]) delete object[key] }
+
   try {
 
     const checkEmail = await this.findOne({ email: email })
@@ -231,14 +231,14 @@ UserSchema.statics.signup = async function( firstName, lastName, email, password
 
     const user = await new this({ ...object }).save()
 
-    const params          = verifyEmail( email.toLowerCase(), firstName, lastName, pin )
-    const command         = new SendEmailCommand(params)
-    const response        = await ses.send(command)
+    const params = verifyEmail(email.toLowerCase(), firstName, lastName, pin)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
-    
-    return { message: `Enter the verification code we sent to ${email}`}
-    
+
+    return { message: `Enter the verification code we sent to ${email}` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -247,17 +247,17 @@ UserSchema.statics.signup = async function( firstName, lastName, email, password
       },
     });
   }
-  
+
 }
 
-UserSchema.statics.noPasswordSignup = async function( email, estimate ){
+UserSchema.statics.noPasswordSignup = async function (email, estimate) {
 
   let CODE
-  let newMembershipID     = generateRandomNumber()
-  let pin                 = generateSixDigitPin()
-  let expirationDate      = new Date()
+  let newMembershipID = generateRandomNumber()
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
-  
+
   let userObject = new Object({
     email: email.toLowerCase(),
     membershipID: newMembershipID,
@@ -270,10 +270,10 @@ UserSchema.statics.noPasswordSignup = async function( email, estimate ){
     businessEmail: estimate.businessEmail,
     businessPhone: estimate.businessPhone
   })
-  
+
   try {
 
-    const checkEmail        = await this.findOne({ email: email })
+    const checkEmail = await this.findOne({ email: email })
 
     if (checkEmail) {
 
@@ -285,17 +285,17 @@ UserSchema.statics.noPasswordSignup = async function( email, estimate ){
         },
       });
     }
-    
-    const user            = await new this({ ...userObject }).save()
 
-    const params          = noPasswordEmailVerification( email.toLowerCase(), pin )
-    const command         = new SendEmailCommand(params)
-    const response        = await ses.send(command)
+    const user = await new this({ ...userObject }).save()
+
+    const params = noPasswordEmailVerification(email.toLowerCase(), pin)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
-    
-    return { message: `Please enter the verification code sent to ${email}`}
-    
+
+    return { message: `Please enter the verification code sent to ${email}` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -304,18 +304,18 @@ UserSchema.statics.noPasswordSignup = async function( email, estimate ){
       },
     });
   }
-  
+
 }
 
-UserSchema.statics.firstEstimate = async function( email, estimate ){
+UserSchema.statics.firstEstimate = async function (email, estimate) {
 
-  let CODE                = 'INTERNAL_SERVER_ERROR'
+  let CODE = 'INTERNAL_SERVER_ERROR'
   let CLIENT
-  let newMembershipID     = generateRandomNumber()
-  let pin                 = generateSixDigitPin()
-  let expirationDate      = new Date()
+  let newMembershipID = generateRandomNumber()
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
-  
+
   let userObject = {
     email: email.toLowerCase(),
     membershipID: newMembershipID,
@@ -375,25 +375,25 @@ UserSchema.statics.firstEstimate = async function( email, estimate ){
     plasticRolls: estimate.plasticRolls,
     dropCloths: estimate.dropCloths
   }
-  
+
   try {
-    
+
     const checkEmail = await this.findOne({ email: email.toLowerCase() })
 
     if (checkEmail) {
 
-      let array                                       = []
-      if(checkEmail.clients.length > 0) array         = [...checkEmail.clients]
+      let array = []
+      if (checkEmail.clients.length > 0) array = [...checkEmail.clients]
 
-      const client                                    = await new Client({ ...clientObject }).save()
+      const client = await new Client({ ...clientObject }).save()
       array.push(client.id)
 
-      checkEmail.clients                              = array
+      checkEmail.clients = array
       checkEmail.save()
 
-      CODE                                            = 'ACCOUNT_EXISTS'
-      CLIENT                                          = client.id
-      
+      CODE = 'ACCOUNT_EXISTS'
+      CLIENT = client.id
+
       throw new GraphQLError(`User with that email already exists, login to continue`, {
         extensions: {
           code: CODE,
@@ -403,22 +403,22 @@ UserSchema.statics.firstEstimate = async function( email, estimate ){
 
     }
 
-    const client  = await new Client({ ...clientObject }).save()
-    
-    let array       = []
+    const client = await new Client({ ...clientObject }).save()
+
+    let array = []
     array.push(client.id)
 
-    userObject.clients    = array
-    
-    const user    = await new this({ ...userObject }).save()
+    userObject.clients = array
 
-    const params              = verifyEmail( email.toLowerCase(), estimate.estimatorName ? estimate.estimatorName : `${user.firstName} ${user.lastName}`, estimate.estimatorName ? null : user.lastName, pin )
-    const command             = new SendEmailCommand(params)
-    const response            = await ses.send(command)
+    const user = await new this({ ...userObject }).save()
 
-    
-    return { message: `Enter the verification code we sent to ${email}`}
-    
+    const params = verifyEmail(email.toLowerCase(), estimate.estimatorName ? estimate.estimatorName : `${user.firstName} ${user.lastName}`, estimate.estimatorName ? null : user.lastName, pin)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
+
+
+    return { message: `Enter the verification code we sent to ${email}` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -428,18 +428,18 @@ UserSchema.statics.firstEstimate = async function( email, estimate ){
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.verifyEmail = async function( checkID, token ){
+UserSchema.statics.verifyEmail = async function (checkID, token) {
 
-  let newTempPassword     = generateSixDigitPin()
-  
+  let newTempPassword = generateSixDigitPin()
+
   try {
 
     let user
 
-    const checkUser             = await this.findById( checkID )
+    const checkUser = await this.findById(checkID)
 
     if (checkUser.emailVerified) {
       throw new GraphQLError(`login`, {
@@ -449,59 +449,59 @@ UserSchema.statics.verifyEmail = async function( checkID, token ){
       });
     }
 
-    if(!checkUser.emailVerified) jwtMethod.verify(token, process.env.JWT_SECRET_VERIFY)
+    if (!checkUser.emailVerified) jwtMethod.verify(token, process.env.JWT_SECRET_VERIFY)
 
-    if(!checkUser.emailVerified){
+    if (!checkUser.emailVerified) {
 
-      user                                              = await this.findById( checkID )
-      user.emailVerified                                = true
-      user.emailVerifiedStamp                           = new Date()
-      if(!checkUser.password) user.password             = newTempPassword
-      
+      user = await this.findById(checkID)
+      user.emailVerified = true
+      user.emailVerifiedStamp = new Date()
+      if (!checkUser.password) user.password = newTempPassword
+
       user.save()
 
     }
-    
-    if(!checkUser.password){
 
-      const paramsPass            = tempPasswordTwo(user.email, newTempPassword )
-      const commandPass           = new SendEmailCommand(paramsPass);
-      const responsePass          = await ses.send(commandPass);
+    if (!checkUser.password) {
 
-      console.log('PASSWORD', responsePass )
-      
+      const paramsPass = tempPasswordTwo(user.email, newTempPassword)
+      const commandPass = new SendEmailCommand(paramsPass);
+      const responsePass = await ses.send(commandPass);
+
+      console.log('PASSWORD', responsePass)
+
     }
 
-    let userLoggedIn            = new Object()
-    userLoggedIn.id             = checkID
-    userLoggedIn.token          = token
-    userLoggedIn.username       = user.estimatorName
-    userLoggedIn.message        = 'You are now verified, you will now be redirected to view your estimate'
-    
+    let userLoggedIn = new Object()
+    userLoggedIn.id = checkID
+    userLoggedIn.token = token
+    userLoggedIn.username = user.estimatorName
+    userLoggedIn.message = 'You are now verified, you will now be redirected to view your estimate'
+
     return userLoggedIn;
 
   } catch (error) {
-    
+
     console.log(error)
     throw new GraphQLError(error.message, {
       extensions: {
         code: 'INTERNAL_SERVER_ERROR',
       },
     });
-    
+
   }
-  
+
 }
 
-UserSchema.statics.pinEmailVerification = async function( pin, email ){
+UserSchema.statics.pinEmailVerification = async function (pin, email) {
 
   let ERROR_CODE = 'INTERNAL_SERVER_ERROR'
-  
+
   try {
 
-    let checkUser             = await this.findOne({ email: email.toLowerCase() } )
+    let checkUser = await this.findOne({ email: email.toLowerCase() })
 
-    if(!checkUser){
+    if (!checkUser) {
       throw new GraphQLError(`Account with email ${email} does not exist`, {
         extensions: {
           code: ERROR_CODE,
@@ -524,7 +524,7 @@ UserSchema.statics.pinEmailVerification = async function( pin, email ){
     if (checkUser.emailVerified) {
 
       ERROR_CODE = 'ACCOUNT_EXISTS'
-      
+
       throw new GraphQLError(`Email is already verified, login to continue`, {
         extensions: {
           code: ERROR_CODE,
@@ -540,52 +540,52 @@ UserSchema.statics.pinEmailVerification = async function( pin, email ){
       })
     }
 
-    if(!checkUser.emailVerified){
+    if (!checkUser.emailVerified) {
 
-      checkUser.emailVerified                                = true
-      checkUser.emailVerifiedStamp                           = new Date()
+      checkUser.emailVerified = true
+      checkUser.emailVerifiedStamp = new Date()
       checkUser.save()
 
     }
 
-    if(!checkUser.password){
+    if (!checkUser.password) {
 
-      const paramsPass                = tempPasswordTwo(checkUser.email, checkUser.verificationCode )
-      const commandPass               = new SendEmailCommand(paramsPass)
-      const responsePass              = await ses.send(commandPass)
+      const paramsPass = tempPasswordTwo(checkUser.email, checkUser.verificationCode)
+      const commandPass = new SendEmailCommand(paramsPass)
+      const responsePass = await ses.send(commandPass)
 
-      checkUser.password              = checkUser.verificationCode
+      checkUser.password = checkUser.verificationCode
       checkUser.save()
 
-      console.log('PASSWORD', responsePass )
-      
+      console.log('PASSWORD', responsePass)
+
     }
 
-    const token                   = jwtMethod.sign({ id: checkUser._id, email: email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '48hr', algorithm: 'HS256' })
+    const token = jwtMethod.sign({ id: checkUser._id, email: email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '48hr', algorithm: 'HS256' })
 
-    let userLoggedIn              = new Object()
-    userLoggedIn.id               = checkUser._id
-    userLoggedIn.token            = token
-    userLoggedIn.username         = checkUser.estimatorName ? checkUser.estimatorName : `${checkUser.firstName} ${checkUser.lastName}`
-    userLoggedIn.message          = `Thank you for verifying your email. You now have full use of the most powerful estimating tool in the painting industry, helping painters make more money.`
-    
+    let userLoggedIn = new Object()
+    userLoggedIn.id = checkUser._id
+    userLoggedIn.token = token
+    userLoggedIn.username = checkUser.estimatorName ? checkUser.estimatorName : `${checkUser.firstName} ${checkUser.lastName}`
+    userLoggedIn.message = `Thank you for verifying your email. You now have full use of the most powerful estimating tool in the painting industry, helping painters make more money.`
+
     return userLoggedIn
 
   } catch (error) {
-    
+
     console.log(error)
     throw new GraphQLError(error.message, {
       extensions: {
         code: ERROR_CODE,
       },
     });
-    
+
   }
-  
+
 }
 
-UserSchema.statics.sendVerificationEmail = async function( email, clientId ){
-  
+UserSchema.statics.sendVerificationEmail = async function (email, clientId) {
+
   try {
 
     const user = await this.findOne({ email: email.toLowerCase() })
@@ -597,18 +597,18 @@ UserSchema.statics.sendVerificationEmail = async function( email, clientId ){
         },
       });
     }
-    
-    const tokenVerify         = jwtMethod.sign({ id: user._id, email: email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '48hr', algorithm: 'HS256' })
 
-    const paramsVerify        = verifyEmailTwo( email.toLowerCase(), user.estimatorName, 'https://middler.com', tokenVerify, clientId )
-    const commandVerify       = new SendEmailCommand(paramsVerify);
-    const responseVerify      = await ses.send(commandVerify);
+    const tokenVerify = jwtMethod.sign({ id: user._id, email: email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '48hr', algorithm: 'HS256' })
+
+    const paramsVerify = verifyEmailTwo(email.toLowerCase(), user.estimatorName, 'https://middler.com', tokenVerify, clientId)
+    const commandVerify = new SendEmailCommand(paramsVerify);
+    const responseVerify = await ses.send(commandVerify);
 
     console.log('VERIFY EMAIL', responseVerify)
 
-    return { message: `Enter the verification code we sent to ${email}`}
-    
-    
+    return { message: `Enter the verification code we sent to ${email}` }
+
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -620,12 +620,12 @@ UserSchema.statics.sendVerificationEmail = async function( email, clientId ){
 
 }
 
-UserSchema.statics.newPinVerification = async function( email ){
-  
-  let pin                 = generateSixDigitPin()
-  let expirationDate      = new Date()
+UserSchema.statics.newPinVerification = async function (email) {
+
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
-  
+
   try {
 
     const checkUser = await this.findOne({ email: email.toLowerCase() })
@@ -638,22 +638,22 @@ UserSchema.statics.newPinVerification = async function( email ){
       });
     }
 
-    if(!checkUser.emailVerified){
+    if (!checkUser.emailVerified) {
 
-      checkUser.verificationCode                             = pin
-      checkUser.codeExpiration                               = expirationDate
+      checkUser.verificationCode = pin
+      checkUser.codeExpiration = expirationDate
       checkUser.save()
 
     }
 
-    const params    = verifyEmail( email.toLowerCase(), checkUser.firstName ? checkUser.firstName : checkUser.estimatorName, checkUser.lastName, pin )
-    const command   = new SendEmailCommand(params)
-    const response  = await ses.send(command)
+    const params = verifyEmail(email.toLowerCase(), checkUser.firstName ? checkUser.firstName : checkUser.estimatorName, checkUser.lastName, pin)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
-    
-    return { message: `Enter the verification code we sent to ${email}`}
-    
+
+    return { message: `Enter the verification code we sent to ${email}` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -664,18 +664,18 @@ UserSchema.statics.newPinVerification = async function( email ){
   }
 }
 
-UserSchema.statics.setPassword = async function( id, password ){
+UserSchema.statics.setPassword = async function (id, password) {
   try {
 
-    const user                    = await this.findById( id )
-    user.password                 = password
+    const user = await this.findById(id)
+    user.password = password
     user.save()
 
-    return { 
+    return {
       message: `You have confirmed your password and you are now ready to login to your account.`,
       passwordCreated: true
     }
-    
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -686,10 +686,10 @@ UserSchema.statics.setPassword = async function( id, password ){
   }
 }
 
-UserSchema.statics.verifyPhone = async function( phone ){
+UserSchema.statics.verifyPhone = async function (phone) {
 
   try {
-    
+
   } catch (error) {
     console.error(error);
     throw new GraphQLError(error.message, {
@@ -698,25 +698,25 @@ UserSchema.statics.verifyPhone = async function( phone ){
       },
     });
   }
-  
+
 }
 
-UserSchema.statics.login = async function( email, password ){
-  
-  let CODE               = 'INTERNAL_SERVER_ERROR'              
-  
+UserSchema.statics.login = async function (email, password) {
+
+  let CODE = 'INTERNAL_SERVER_ERROR'
+
   try {
 
-    let user 
+    let user
 
-    if(email){
+    if (email) {
       user = await this.findOne({ email: email.toLowerCase() })
     }
 
     if (!user) {
 
       CODE = 'UNREGISTERED'
-      
+
       throw new GraphQLError('Email address entered is not registered. Sign up to continue.', {
         extensions: {
           code: 'UNREGISTERED',
@@ -724,12 +724,12 @@ UserSchema.statics.login = async function( email, password ){
       });
     }
 
-    if(!user.password){
-      let userLoggedIn            = new Object()
-      userLoggedIn.email          = email
-      userLoggedIn.password       = null
-      userLoggedIn.emailVerified  = user.emailVerified
-      
+    if (!user.password) {
+      let userLoggedIn = new Object()
+      userLoggedIn.email = email
+      userLoggedIn.password = null
+      userLoggedIn.emailVerified = user.emailVerified
+
       return userLoggedIn
     }
 
@@ -744,37 +744,37 @@ UserSchema.statics.login = async function( email, password ){
     })
 
     if (isMatch) {
-      
+
       const token = jwtMethod.sign({ id: user._id, email: email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '48hr', algorithm: 'HS256' })
-      const { _id  } = user
+      const { _id } = user
 
-      let userLoggedIn            = new Object()
+      let userLoggedIn = new Object()
 
-      if(user.role == 'disabled'){
+      if (user.role == 'disabled') {
         console.log('ERROR DISABLED')
 
         CODE = 'DISABLED'
-        
+
         throw new GraphQLError('Account is disabled', {
           extensions: {
             code: CODE,
           }
         })
-        
+
       }
 
-      userLoggedIn.id             = _id
-      userLoggedIn.token          = token
-      userLoggedIn.username       = user.estimatorName ? user.estimatorName : `${user.firstName} ${user.lastName}`
-      userLoggedIn.emailVerified  = user.emailVerified
-      userLoggedIn.message        = 'Logged in'
+      userLoggedIn.id = _id
+      userLoggedIn.token = token
+      userLoggedIn.username = user.estimatorName ? user.estimatorName : `${user.firstName} ${user.lastName}`
+      userLoggedIn.emailVerified = user.emailVerified
+      userLoggedIn.message = 'Logged in'
 
       return userLoggedIn
-  
+
     } else {
 
       CODE = 'FORBIDDEN'
-      
+
       throw new GraphQLError('Invalid password', {
         extensions: {
           code: CODE,
@@ -789,21 +789,21 @@ UserSchema.statics.login = async function( email, password ){
       }
     })
   }
-  
+
 }
 
-UserSchema.statics.resetPassword = async function( id, password, token ){
+UserSchema.statics.resetPassword = async function (id, password, token) {
 
   try {
 
     jwtMethod.verify(token, process.env.JWT_SECRET_ACTIVATE)
-    
-    const user          = await User.findById(id)
-    user.password       = password
+
+    const user = await User.findById(id)
+    user.password = password
     await user.save()
 
     return { message: 'Password updated' }
-    
+
   } catch (error) {
     console.log('ERROR', error)
     throw new GraphQLError(error.message, {
@@ -814,33 +814,33 @@ UserSchema.statics.resetPassword = async function( id, password, token ){
   }
 }
 
-UserSchema.statics.updateLogo = async function( id, url ){
-  
+UserSchema.statics.updateLogo = async function (id, url) {
+
   try {
-    
-    const user           = await User.findById(id)
-    
+
+    const user = await User.findById(id)
+
     let location = user.businessLogo.split("/next-s3-uploads")[1]
     location = 'next-s3-uploads' + location
 
     let params = {
-      Bucket: 'business-logos-middler', 
+      Bucket: 'business-logos-middler',
       Key: location
     }
-    
+
     S3.deleteObject(params, (err, data) => {
       console.log(err)
       if (err) return { message: err }
     });
-    
-    user.businessLogo    = url
+
+    user.businessLogo = url
     user.save()
 
     return {
       message: 'Logo was uploaded',
       businessLogo: url
-     }
-    
+    }
+
   } catch (error) {
     console.log('ERROR', error)
     throw new GraphQLError(error.message, {
@@ -849,21 +849,21 @@ UserSchema.statics.updateLogo = async function( id, url ){
       }
     })
   }
-  
+
 }
 
-UserSchema.statics.deletePendingLogo = async function( url ){
-  
+UserSchema.statics.deletePendingLogo = async function (url) {
+
   try {
-    
+
     let location = url.split("/next-s3-uploads")[1]
     location = 'next-s3-uploads' + location
 
     let params = {
-      Bucket: 'business-logos-middler', 
+      Bucket: 'business-logos-middler',
       Key: location
     }
-    
+
     S3.deleteObject(params, (err, data) => {
       console.log(err)
       if (err) return { message: err }
@@ -872,8 +872,8 @@ UserSchema.statics.deletePendingLogo = async function( url ){
     return {
       message: 'Logo was uploaded',
       businessLogo: url
-     }
-    
+    }
+
   } catch (error) {
     console.log('ERROR', error)
     throw new GraphQLError(error.message, {
@@ -882,11 +882,11 @@ UserSchema.statics.deletePendingLogo = async function( url ){
       }
     })
   }
-  
+
 }
 
-UserSchema.statics.updateBusinessInformation = async function( id, businessName, estimatorName, businessAddress, businessPhone, businessEmail, businessWebsite, businessLicenseNumber, businessInstagram ){
-  
+UserSchema.statics.updateBusinessInformation = async function (id, businessName, estimatorName, businessAddress, businessPhone, businessEmail, businessWebsite, businessLicenseNumber, businessInstagram) {
+
   const object = new Object({
     businessName,
     estimatorName,
@@ -897,13 +897,13 @@ UserSchema.statics.updateBusinessInformation = async function( id, businessName,
     businessLicenseNumber,
     businessInstagram
   })
-  
+
   try {
-    
-    const user            = await this.findByIdAndUpdate(id, object, { new: true })
+
+    const user = await this.findByIdAndUpdate(id, object, { new: true })
 
     return { message: 'Business info updated' }
-    
+
   } catch (error) {
     console.log('ERROR', error)
     throw new GraphQLError(error.message, {
@@ -912,44 +912,44 @@ UserSchema.statics.updateBusinessInformation = async function( id, businessName,
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.updatePersonalInformation = async function( id, firstName, lastName, email, bio ){
-  
-  let pin                             = generateSixDigitPin()
-  let expirationDate      = new Date()
+UserSchema.statics.updatePersonalInformation = async function (id, firstName, lastName, email, bio) {
+
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
-  
+
   const object = new Object({
     firstName,
     lastName,
     email,
     bio
   })
-  
+
   try {
 
-    const checkUser                   = await this.findById(id)
+    const checkUser = await this.findById(id)
 
-    if(checkUser.email !== email){
+    if (checkUser.email !== email) {
 
-      const params                    = verifyEmail( email, firstName, lastName, pin )
-      const command                   = new SendEmailCommand(params)
-      const response                  = await ses.send(command)
-      
-      checkUser.emailVerified         = false
-      checkUser.emailVerifiedStamp    = new Date().toISOString()
-      checkUser.codeExpiration        = expirationDate
-      checkUser.verificationCode      = pin
+      const params = verifyEmail(email, firstName, lastName, pin)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
+
+      checkUser.emailVerified = false
+      checkUser.emailVerifiedStamp = new Date().toISOString()
+      checkUser.codeExpiration = expirationDate
+      checkUser.verificationCode = pin
       checkUser.save()
-      
+
     }
-    
-    const user                        = await this.findByIdAndUpdate(id, object, { new: true })
+
+    const user = await this.findByIdAndUpdate(id, object, { new: true })
 
     return { message: checkUser.email !== email ? `Enter the verification code we sent to ${email}. Session will expire in 15 mins` : 'Personal information updated' }
-    
+
   } catch (error) {
     console.log('ERROR', error)
     throw new GraphQLError(error.message, {
@@ -958,10 +958,10 @@ UserSchema.statics.updatePersonalInformation = async function( id, firstName, la
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.createEstimate = async function( id, estimate, token ){
+UserSchema.statics.createEstimate = async function (id, estimate, token) {
 
   let clientObject = {
     clientName: estimate.clientName,
@@ -1007,26 +1007,26 @@ UserSchema.statics.createEstimate = async function( id, estimate, token ){
     plasticRolls: estimate.plasticRolls,
     dropCloths: estimate.dropCloths
   }
-  
+
   try {
-    
-    const checkUser                         = await this.findById(id)
 
-    let array                               = []
-    if(checkUser.clients.length > 0) array  = [...checkUser.clients]
+    const checkUser = await this.findById(id)
 
-    const client                            = await new Client({ ...clientObject }).save()
+    let array = []
+    if (checkUser.clients.length > 0) array = [...checkUser.clients]
+
+    const client = await new Client({ ...clientObject }).save()
     array.push(client.id)
 
-    checkUser.clients                       = array
+    checkUser.clients = array
     checkUser.save()
-    
-    
+
+
     return {
       message: 'New estimate created',
       estimate: client
     }
-    
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -1035,17 +1035,17 @@ UserSchema.statics.createEstimate = async function( id, estimate, token ){
       },
     });
   }
-  
+
 }
 
-UserSchema.statics.setupClientSecret = async function( id, email, name, paymentPlan, code ){
- 
-  let orderID       = generateEightDigitNumber()
-  let customer 
-  
+UserSchema.statics.setupClientSecret = async function (id, email, name, paymentPlan, code) {
+
+  let orderID = generateEightDigitNumber()
+  let customer
+
   try {
 
-    const checkUser                         = await this.findById(id)
+    const checkUser = await this.findById(id)
 
     const customers = await stripe.customers.list({
       email: email,
@@ -1082,11 +1082,11 @@ UserSchema.statics.setupClientSecret = async function( id, email, name, paymentP
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
       items: [{
-        price: paymentPlan == 'yearly' 
-          ? 
-          process.env.NODE_ENV === 'development' ? process.env.STRIPE_YEARLY_SUBSCRIPTION_TEST_ID : process.env.STRIPE_YEARLY_SUBSCRIPTION_LIVE_ID 
-          : 
-          process.env.NODE_ENV === 'development' ? process.env.STRIPE_MONTHLY_SUBSCRIPTION_TEST_ID : process.env.STRIPE_MONTHLY_SUBSCRIPTION_LIVE_ID 
+        price: paymentPlan == 'yearly'
+          ?
+          process.env.NODE_ENV === 'development' ? process.env.STRIPE_YEARLY_SUBSCRIPTION_TEST_ID : process.env.STRIPE_YEARLY_SUBSCRIPTION_LIVE_ID
+          :
+          process.env.NODE_ENV === 'development' ? process.env.STRIPE_MONTHLY_SUBSCRIPTION_TEST_ID : process.env.STRIPE_MONTHLY_SUBSCRIPTION_LIVE_ID
       }],
       metadata: {
         orderID: orderID, // Store your order ID here
@@ -1113,10 +1113,10 @@ UserSchema.statics.setupClientSecret = async function( id, email, name, paymentP
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.forgotPassword = async function( email ){
+UserSchema.statics.forgotPassword = async function (email) {
 
   try {
 
@@ -1130,14 +1130,14 @@ UserSchema.statics.forgotPassword = async function( email ){
       });
     }
 
-    const token = jwtMethod.sign({ id: user._id }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', {expiresIn: '1hr', algorithm: 'HS256'})
+    const token = jwtMethod.sign({ id: user._id }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '1hr', algorithm: 'HS256' })
 
-    const params    = forgotPassword( email, 'https://middler.com', token )
-    const command   = new SendEmailCommand(params)
-    const response  = await ses.send(command)
+    const params = forgotPassword(email, 'https://middler.com', token)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
-    return { message: `Reset password email sent to ${email}`}
-    
+    return { message: `Reset password email sent to ${email}` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -1146,19 +1146,19 @@ UserSchema.statics.forgotPassword = async function( email ){
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.updatePassword = async function( newPassword, id, token ){
+UserSchema.statics.updatePassword = async function (newPassword, id, token) {
 
   try {
 
     jwtMethod.verify(token, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K')
 
-    const user                = await User.findById(id)
-    
-    const isSamePassword      = await bcrypt.compare(newPassword, user.password)
-    
+    const user = await User.findById(id)
+
+    const isSamePassword = await bcrypt.compare(newPassword, user.password)
+
     if (isSamePassword) {
       throw new GraphQLError('New password cannot be the same as the current password', {
         extensions: {
@@ -1167,13 +1167,13 @@ UserSchema.statics.updatePassword = async function( newPassword, id, token ){
       });
     }
 
-    user.password               = newPassword
+    user.password = newPassword
     await user.save()
-    
+
 
     return { message: 'Password updated successfully' }
-    
-    
+
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -1182,21 +1182,21 @@ UserSchema.statics.updatePassword = async function( newPassword, id, token ){
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.contactMiddler = async function( email, message ){
+UserSchema.statics.contactMiddler = async function (email, message) {
 
   try {
 
-    const params    = contactMiddler( email, message )
-    const command   = new SendEmailCommand(params)
-    const response  = await ses.send(command)
+    const params = contactMiddler(email, message)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
-    
-    return { message: `Inquiry sent`}
-    
+
+    return { message: `Inquiry sent` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -1205,16 +1205,16 @@ UserSchema.statics.contactMiddler = async function( email, message ){
       },
     });
   }
-  
+
 }
 
-UserSchema.statics.changePassword = async function( id, currentPassword, newPassword ){
-  
+UserSchema.statics.changePassword = async function (id, currentPassword, newPassword) {
+
   try {
 
-    const user                    = await User.findById(id)
+    const user = await User.findById(id)
 
-    const isCurrentPasswordValid  = await bcrypt.compare(currentPassword, user.password)
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password)
 
     if (!isCurrentPasswordValid) {
       throw new GraphQLError('Current password is incorrect', {
@@ -1223,8 +1223,8 @@ UserSchema.statics.changePassword = async function( id, currentPassword, newPass
         },
       });
     }
-    
-    const isSamePassword         = currentPassword === newPassword
+
+    const isSamePassword = currentPassword === newPassword
 
     if (isSamePassword) {
       throw new GraphQLError('New password cannot be the same as the current password', {
@@ -1234,13 +1234,13 @@ UserSchema.statics.changePassword = async function( id, currentPassword, newPass
       });
     }
 
-    user.password               = newPassword
+    user.password = newPassword
     await user.save()
-    
+
 
     return { message: 'Password updated.' }
-    
-    
+
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -1249,31 +1249,31 @@ UserSchema.statics.changePassword = async function( id, currentPassword, newPass
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.disableAccount = async function( id ){
-  
+UserSchema.statics.disableAccount = async function (id) {
+
   try {
 
-    const updatedUser                   = await User.updateOne({ _id: id }, // Find the user by their ID
-      { 
+    const updatedUser = await User.updateOne({ _id: id }, // Find the user by their ID
+      {
         $set: {
           role: 'disabled'
         }
       }
     )
 
-    const user                          = await User.findById(id)
-    const subscriptionID                = user.subscriptionID
+    const user = await User.findById(id)
+    const subscriptionID = user.subscriptionID
 
-    const Payment                       = require('../models/payments')
+    const Payment = require('../models/payments')
 
     // Cancel the user's subscription
-    const subscriptionCancellation      = await Payment.cancelSubscription(subscriptionID)
-    
+    const subscriptionCancellation = await Payment.cancelSubscription(subscriptionID)
+
     return { message: 'Account disabled' }
-  
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -1282,25 +1282,25 @@ UserSchema.statics.disableAccount = async function( id ){
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.activateAccount = async function( email, password ){
+UserSchema.statics.activateAccount = async function (email, password) {
 
-  let CODE               = 'INTERNAL_SERVER_ERROR'              
-  
+  let CODE = 'INTERNAL_SERVER_ERROR'
+
   try {
 
-    let user 
+    let user
 
-    if(email){
+    if (email) {
       user = await this.findOne({ email: email })
     }
 
     if (!user) {
 
       CODE = 'UNREGISTERED'
-      
+
       throw new GraphQLError('Email address entered is not registered. Sign up to continue.', {
         extensions: {
           code: 'UNREGISTERED',
@@ -1308,12 +1308,12 @@ UserSchema.statics.activateAccount = async function( email, password ){
       });
     }
 
-    if(!user.password){
-      let userLoggedIn            = new Object()
-      userLoggedIn.email          = email
-      userLoggedIn.password       = null
-      userLoggedIn.emailVerified  = user.emailVerified
-      
+    if (!user.password) {
+      let userLoggedIn = new Object()
+      userLoggedIn.email = email
+      userLoggedIn.password = null
+      userLoggedIn.emailVerified = user.emailVerified
+
       return userLoggedIn
     }
 
@@ -1328,15 +1328,15 @@ UserSchema.statics.activateAccount = async function( email, password ){
     })
 
     if (isMatch) {
-      
+
       const token = jwtMethod.sign({ id: user._id, email: email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '48hr', algorithm: 'HS256' })
-      const { _id  } = user
+      const { _id } = user
 
-      let userLoggedIn            = new Object()
+      let userLoggedIn = new Object()
 
-      if(user.role == 'disabled'){
-        const updatedUser                   = await User.updateOne({ _id: user.id }, // Find the user by their ID
-          { 
+      if (user.role == 'disabled') {
+        const updatedUser = await User.updateOne({ _id: user.id }, // Find the user by their ID
+          {
             $set: {
               role: 'user'
             }
@@ -1344,18 +1344,18 @@ UserSchema.statics.activateAccount = async function( email, password ){
         )
       }
 
-      userLoggedIn.id             = _id
-      userLoggedIn.token          = token
-      userLoggedIn.username       = user.estimatorName ? user.estimatorName : `${user.firstName} ${user.lasstName}`
-      userLoggedIn.emailVerified  = user.emailVerified
-      userLoggedIn.message        = 'Logged in'
+      userLoggedIn.id = _id
+      userLoggedIn.token = token
+      userLoggedIn.username = user.estimatorName ? user.estimatorName : `${user.firstName} ${user.lasstName}`
+      userLoggedIn.emailVerified = user.emailVerified
+      userLoggedIn.message = 'Logged in'
 
       return userLoggedIn
-  
+
     } else {
 
       CODE = 'FORBIDDEN'
-      
+
       throw new GraphQLError('Invalid password', {
         extensions: {
           code: CODE,
@@ -1370,19 +1370,19 @@ UserSchema.statics.activateAccount = async function( email, password ){
       }
     })
   }
-  
+
 }
 
-UserSchema.statics.quickEstimate = async function( emailDestination, recentClient, estimate ){
-  
+UserSchema.statics.quickEstimate = async function (emailDestination, recentClient, estimate) {
+
   let CLIENT
   let newEstimate
-  let format              = 'short'
-  let message             = 'Estimates sent and saved'
-  let CODE                = 'INTERNAL_SERVER_ERROR'
-  let newMembershipID     = generateRandomNumber()
-  let pin                 = generateSixDigitPin()
-  let expirationDate      = new Date()
+  let format = 'short'
+  let message = 'Estimates sent and saved'
+  let CODE = 'INTERNAL_SERVER_ERROR'
+  let newMembershipID = generateRandomNumber()
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
 
   let userObject = new Object({
@@ -1447,154 +1447,154 @@ UserSchema.statics.quickEstimate = async function( emailDestination, recentClien
     dropCloths: estimate.dropCloths,
     adjustment: estimate.adjustment
   }
-  
+
   try {
 
     let user = await this.findOne({ email: emailDestination.toLowerCase() })
 
     if (user) {
 
-      if(!recentClient){
+      if (!recentClient) {
 
-        let array                                       = []
-        if(user.clients.length > 0) array               = [...user.clients]
+        let array = []
+        if (user.clients.length > 0) array = [...user.clients]
 
-        const client                                    = await new Client({ ...clientObject }).save()
-        
-        if(clientObject.adjustment){
+        const client = await new Client({ ...clientObject }).save()
 
-          const foundEstimate                           = await Client.findById( client.id )
+        if (clientObject.adjustment) {
 
-          let adjustmentArray                           = [...foundEstimate.adjustments]
-          let newAdjustment                             = new Object()
-          newAdjustment.interiorAdjusted                = estimate.interiorAdjusted.replace('$', '')
-          newAdjustment.cabinetAdjusted                 = estimate.cabinetAdjusted.replace('$', '')
-          newAdjustment.exteriorAdjusted                = estimate.exteriorAdjusted.replace('$', '')
-          newAdjustment.dateAdjusted                    = new Date().toISOString()
+          const foundEstimate = await Client.findById(client.id)
+
+          let adjustmentArray = [...foundEstimate.adjustments]
+          let newAdjustment = new Object()
+          newAdjustment.interiorAdjusted = estimate.interiorAdjusted.replace('$', '')
+          newAdjustment.cabinetAdjusted = estimate.cabinetAdjusted.replace('$', '')
+          newAdjustment.exteriorAdjusted = estimate.exteriorAdjusted.replace('$', '')
+          newAdjustment.dateAdjusted = new Date().toISOString()
           adjustmentArray.push(newAdjustment)
-          
-          foundEstimate.adjustment                      = clientObject.adjustment
-          foundEstimate.adjustments                     = adjustmentArray
+
+          foundEstimate.adjustment = clientObject.adjustment
+          foundEstimate.adjustments = adjustmentArray
           foundEstimate.save()
 
         }
-        
-        array.push(client.id)
-        newEstimate                                     = client
 
-        user.clients                                    = array
+        array.push(client.id)
+        newEstimate = client
+
+        user.clients = array
 
       }
-      
-      user.businessName                               = estimate.businessName,
-      // user.businessLogo                               = estimate.businessLogo,
-      user.estimatorName                              = estimate.estimatorName,
-      // user.businessAddress                            = estimate.businessAddress,
-      user.businessPhone                              = estimate.businessPhone,
-      // user.businessEmail                              = estimate.businessEmail,
-      // user.businessWebsite                            = estimate.businessWebsite,
-      // user.businessLicenseNumber                      = estimate.businessLicenseNumber,
-      // user.businessInstagram                          = estimate.businessInstagram
-      user.save()
 
-      CODE                                            = 'ACCOUNT_EXISTS' 
+      user.businessName = estimate.businessName,
+        // user.businessLogo                               = estimate.businessLogo,
+        user.estimatorName = estimate.estimatorName,
+        // user.businessAddress                            = estimate.businessAddress,
+        user.businessPhone = estimate.businessPhone,
+        // user.businessEmail                              = estimate.businessEmail,
+        // user.businessWebsite                            = estimate.businessWebsite,
+        // user.businessLicenseNumber                      = estimate.businessLicenseNumber,
+        // user.businessInstagram                          = estimate.businessInstagram
+        user.save()
+
+      CODE = 'ACCOUNT_EXISTS'
 
     } else {
 
-      if(!recentClient){
+      if (!recentClient) {
 
-        const client                                    = await new Client({ ...clientObject }).save()
+        const client = await new Client({ ...clientObject }).save()
 
-        if(clientObject.adjustment){
+        if (clientObject.adjustment) {
 
-          const foundEstimate                           = await Client.findById( client.id )
+          const foundEstimate = await Client.findById(client.id)
 
-          let adjustmentArray                           = [...foundEstimate.adjustments]
-          let newAdjustment                             = new Object()
-          newAdjustment.interiorAdjusted                = estimate.interiorAdjusted.replace('$', '')
-          newAdjustment.cabinetAdjusted                 = estimate.cabinetAdjusted.replace('$', '')
-          newAdjustment.exteriorAdjusted                = estimate.exteriorAdjusted.replace('$', '')
-          newAdjustment.dateAdjusted                    = new Date().toISOString()
+          let adjustmentArray = [...foundEstimate.adjustments]
+          let newAdjustment = new Object()
+          newAdjustment.interiorAdjusted = estimate.interiorAdjusted.replace('$', '')
+          newAdjustment.cabinetAdjusted = estimate.cabinetAdjusted.replace('$', '')
+          newAdjustment.exteriorAdjusted = estimate.exteriorAdjusted.replace('$', '')
+          newAdjustment.dateAdjusted = new Date().toISOString()
           adjustmentArray.push(newAdjustment)
-          
-          foundEstimate.adjustment                      = clientObject.adjustment
-          foundEstimate.adjustments                     = adjustmentArray
+
+          foundEstimate.adjustment = clientObject.adjustment
+          foundEstimate.adjustments = adjustmentArray
           foundEstimate.save()
 
         }
-        
-        newEstimate                                     = client
 
-        let array       = []
+        newEstimate = client
+
+        let array = []
         array.push(client.id)
 
-        userObject.clients                              = array
+        userObject.clients = array
 
       }
-        
-      user                                            = await new this({ ...userObject }).save()
 
-      const paramsPass                                = tempPasswordTwo(
-        user.email, 
-        user.verificationCode 
+      user = await new this({ ...userObject }).save()
+
+      const paramsPass = tempPasswordTwo(
+        user.email,
+        user.verificationCode
       )
 
-      const commandPass                               = new SendEmailCommand(paramsPass)
-      const responsePass                              = await ses.send(commandPass)
+      const commandPass = new SendEmailCommand(paramsPass)
+      const responsePass = await ses.send(commandPass)
 
-      message                                         = 'Estimates sent as well as temporary password email'
-      
-      console.log('PASSWORD', responsePass )
-      
+      message = 'Estimates sent as well as temporary password email'
+
+      console.log('PASSWORD', responsePass)
+
     }
 
-    if(!estimate.businessName && !estimate.businessEmail) format = 'minimal'
+    if (!estimate.businessName && !estimate.businessEmail) format = 'minimal'
 
-    if(format == 'short' && emailDestination){
+    if (format == 'short' && emailDestination) {
 
-      const params    = sendEstimateQuick( 
+      const params = sendEstimateQuick(
         recentClient ? recentClient : newEstimate.id,
         user.id,
         'https://middler.com',
-        emailDestination.toLowerCase(), 
+        emailDestination.toLowerCase(),
         userObject.businessLogo ? userObject.businessLogo : 'https://middler.com/assets/templogo.png',
-        userObject.businessName, 
+        userObject.businessName,
         userObject.businessAddress,
         userObject.estimatorName,
-        userObject.businessEmail, 
-        userObject.businessPhone ? userObject.businessPhone : '', 
-        estimate.adjustment 
-          ? 
-            estimate.interiorAdjusted.replace('$', '')
-          : 
+        userObject.businessEmail,
+        userObject.businessPhone ? userObject.businessPhone : '',
+        estimate.adjustment
+          ?
+          estimate.interiorAdjusted.replace('$', '')
+          :
           clientObject.interiorEstimate
             ?
             `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          , 
-        clientObject.adjustment 
-          ? 
-            estimate.exteriorAdjusted.replace('$', '')
-          : 
+        ,
+        clientObject.adjustment
+          ?
+          estimate.exteriorAdjusted.replace('$', '')
+          :
           clientObject.exteriorEstimate
             ?
             `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? 
-            estimate.cabinetAdjusted.replace('$', '')
-          : 
-            clientObject.cabinetEstimate
+        ,
+        clientObject.adjustment
+          ?
+          estimate.cabinetAdjusted.replace('$', '')
+          :
+          clientObject.cabinetEstimate
             ?
             `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? `${totalEstimateAdjustedNewEstimate(estimate)}` 
+        ,
+        clientObject.adjustment
+          ? `${totalEstimateAdjustedNewEstimate(estimate)}`
           : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
         clientObject.clientName,
         clientObject.clientPhone ? clientObject.clientPhone : '',
@@ -1617,56 +1617,56 @@ UserSchema.statics.quickEstimate = async function( emailDestination, recentClien
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command   = new SendEmailCommand(params)
-      const response  = await ses.send(command)
-  
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
+
       console.log(response)
     }
 
-    if(format == 'short' && clientObject.clientEmail){
-      const params    = sendEstimateQuick( 
+    if (format == 'short' && clientObject.clientEmail) {
+      const params = sendEstimateQuick(
         recentClient ? recentClient : newEstimate.id,
         user.id,
         'https://middler.com',
-        clientObject.clientEmail, 
+        clientObject.clientEmail,
         userObject.businessLogo ? userObject.businessLogo : 'https://middler.com/assets/templogo.png',
-        userObject.businessName, 
+        userObject.businessName,
         userObject.businessAddress,
         userObject.estimatorName,
-        userObject.businessEmail, 
-        userObject.businessPhone ? userObject.businessPhone : '', 
-        estimate.adjustment 
-          ? 
-            estimate.interiorAdjusted.replace('$', '')
-          : 
+        userObject.businessEmail,
+        userObject.businessPhone ? userObject.businessPhone : '',
+        estimate.adjustment
+          ?
+          estimate.interiorAdjusted.replace('$', '')
+          :
           clientObject.interiorEstimate
             ?
             `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          , 
-        clientObject.adjustment 
-          ? 
-            estimate.exteriorAdjusted.replace('$', '')
-          : 
+        ,
+        clientObject.adjustment
+          ?
+          estimate.exteriorAdjusted.replace('$', '')
+          :
           clientObject.exteriorEstimate
             ?
             `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? 
-            estimate.cabinetAdjusted.replace('$', '')
-          : 
-            clientObject.cabinetEstimate
+        ,
+        clientObject.adjustment
+          ?
+          estimate.cabinetAdjusted.replace('$', '')
+          :
+          clientObject.cabinetEstimate
             ?
             `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? `${totalEstimateAdjustedNewEstimate(estimate)}` 
+        ,
+        clientObject.adjustment
+          ? `${totalEstimateAdjustedNewEstimate(estimate)}`
           : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
         clientObject.clientName,
         clientObject.clientPhone ? clientObject.clientPhone : '',
@@ -1689,55 +1689,55 @@ UserSchema.statics.quickEstimate = async function( emailDestination, recentClien
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command   = new SendEmailCommand(params)
-      const response  = await ses.send(command)
-  
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
+
       console.log(response)
     }
 
-    if(format == 'minimal' && emailDestination){
-      const params    = sendEstimateMinimal( 
+    if (format == 'minimal' && emailDestination) {
+      const params = sendEstimateMinimal(
         newEstimate.id,
         user.id,
         'https://middler.com',
-        emailDestination.toLowerCase(), 
+        emailDestination.toLowerCase(),
         userObject.businessLogo,
-        userObject.businessName, 
-        userObject.estimatorName, 
-        userObject.businessEmail, 
-        userObject.businessPhone ? userObject.businessPhone : '', 
-        estimate.adjustment 
-          ? 
-            estimate.interiorAdjusted.replace('$', '')
-          : 
+        userObject.businessName,
+        userObject.estimatorName,
+        userObject.businessEmail,
+        userObject.businessPhone ? userObject.businessPhone : '',
+        estimate.adjustment
+          ?
+          estimate.interiorAdjusted.replace('$', '')
+          :
           clientObject.interiorEstimate
             ?
             `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          , 
-        clientObject.adjustment 
-          ? 
-            estimate.exteriorAdjusted.replace('$', '')
-          : 
+        ,
+        clientObject.adjustment
+          ?
+          estimate.exteriorAdjusted.replace('$', '')
+          :
           clientObject.exteriorEstimate
             ?
             `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? 
-            estimate.cabinetAdjusted.replace('$', '')
-          : 
-            clientObject.cabinetEstimate
+        ,
+        clientObject.adjustment
+          ?
+          estimate.cabinetAdjusted.replace('$', '')
+          :
+          clientObject.cabinetEstimate
             ?
             `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? `${totalEstimateAdjustedNewEstimate(estimate)}` 
+        ,
+        clientObject.adjustment
+          ? `${totalEstimateAdjustedNewEstimate(estimate)}`
           : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
         clientObject.clientName,
         clientObject.clientPhone ? clientObject.clientPhone : '',
@@ -1760,55 +1760,55 @@ UserSchema.statics.quickEstimate = async function( emailDestination, recentClien
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command   = new SendEmailCommand(params)
-      const response  = await ses.send(command)
-  
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
+
       console.log(response)
     }
 
-    if(format == 'minimal' && clientObject.clientEmail){
-      const params    = sendEstimateMinimal( 
+    if (format == 'minimal' && clientObject.clientEmail) {
+      const params = sendEstimateMinimal(
         newEstimate.id,
         user.id,
         'https://middler.com',
-        clientObject.clientEmail, 
+        clientObject.clientEmail,
         userObject.businessLogo,
-        userObject.businessName, 
-        userObject.estimatorName, 
-        userObject.businessEmail, 
-        userObject.businessPhone ? userObject.businessPhone : '', 
-        estimate.adjustment 
-          ? 
-            estimate.interiorAdjusted.replace('$', '')
-          : 
+        userObject.businessName,
+        userObject.estimatorName,
+        userObject.businessEmail,
+        userObject.businessPhone ? userObject.businessPhone : '',
+        estimate.adjustment
+          ?
+          estimate.interiorAdjusted.replace('$', '')
+          :
           clientObject.interiorEstimate
             ?
             `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          , 
-        clientObject.adjustment 
-          ? 
-            estimate.exteriorAdjusted.replace('$', '')
-          : 
+        ,
+        clientObject.adjustment
+          ?
+          estimate.exteriorAdjusted.replace('$', '')
+          :
           clientObject.exteriorEstimate
             ?
             `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? 
-            estimate.cabinetAdjusted.replace('$', '')
-          : 
-            clientObject.cabinetEstimate
+        ,
+        clientObject.adjustment
+          ?
+          estimate.cabinetAdjusted.replace('$', '')
+          :
+          clientObject.cabinetEstimate
             ?
             `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? `${totalEstimateAdjustedNewEstimate(estimate)}` 
+        ,
+        clientObject.adjustment
+          ? `${totalEstimateAdjustedNewEstimate(estimate)}`
           : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
         clientObject.clientName,
         clientObject.clientPhone ? clientObject.clientPhone : '',
@@ -1831,23 +1831,23 @@ UserSchema.statics.quickEstimate = async function( emailDestination, recentClien
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command   = new SendEmailCommand(params)
-      const response  = await ses.send(command)
-  
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
+
       console.log(response)
     }
-    
-    const token                 = jwtMethod.sign({ id: user._id, email: user.email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '24hr', algorithm: 'HS256' })
-    
-    return { 
+
+    const token = jwtMethod.sign({ id: user._id, email: user.email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '24hr', algorithm: 'HS256' })
+
+    return {
       id: recentClient ? recentClient : newEstimate.id,
       token: token,
       username: user.estimatorName ? user.estimatorName : `${user.firstName} ${user.lastName}`,
       userID: user._id,
       emailVerified: user.emailVerified,
       message: message
-     }
-    
+    }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -1856,15 +1856,15 @@ UserSchema.statics.quickEstimate = async function( emailDestination, recentClien
       },
     });
   }
-  
+
 }
 
-UserSchema.statics.sqftEstimateLogin = async function( email, password, estimate ){
+UserSchema.statics.sqftEstimateLogin = async function (email, password, estimate) {
 
   let CLIENT
   let newEstimate
-  let format              = 'short'
-  let CODE                = 'INTERNAL_SERVER_ERROR'
+  let format = 'short'
+  let CODE = 'INTERNAL_SERVER_ERROR'
 
   let clientObject = {
     adjustment: estimate.adjustment,
@@ -1924,18 +1924,18 @@ UserSchema.statics.sqftEstimateLogin = async function( email, password, estimate
 
   try {
 
-    const Client      = require('../models/client')
-    
-    let user 
+    const Client = require('../models/client')
 
-    if(email){
-      user            = await this.findOne({ email: email.toLowerCase() })
+    let user
+
+    if (email) {
+      user = await this.findOne({ email: email.toLowerCase() })
     }
 
     if (!user) {
 
       CODE = 'UNREGISTERED'
-      
+
       throw new GraphQLError('Email address entered is not registered.', {
         extensions: {
           code: 'UNREGISTERED',
@@ -1943,12 +1943,12 @@ UserSchema.statics.sqftEstimateLogin = async function( email, password, estimate
       });
     }
 
-    if(!user.password){
-      let userLoggedIn            = new Object()
-      userLoggedIn.email          = email
-      userLoggedIn.password       = null
-      userLoggedIn.emailVerified  = user.emailVerified
-      
+    if (!user.password) {
+      let userLoggedIn = new Object()
+      userLoggedIn.email = email
+      userLoggedIn.password = null
+      userLoggedIn.emailVerified = user.emailVerified
+
       return userLoggedIn
     }
 
@@ -1964,75 +1964,75 @@ UserSchema.statics.sqftEstimateLogin = async function( email, password, estimate
 
     if (isMatch) {
 
-      if(user.role == 'disabled'){
+      if (user.role == 'disabled') {
         console.log('ERROR DISABLED')
 
         CODE = 'DISABLED'
-        
+
         throw new GraphQLError('Account is disabled', {
           extensions: {
             code: CODE,
           }
         })
-        
+
       }
 
-      let array                                       = []
-      if(user.clients.length > 0) array               = [...user.clients]
+      let array = []
+      if (user.clients.length > 0) array = [...user.clients]
 
-      const client                                    = await new Client({ ...clientObject }).save()
-      
+      const client = await new Client({ ...clientObject }).save()
+
       array.push(client.id)
-      newEstimate                                     = client
+      newEstimate = client
 
-      user.clients                                    = array
+      user.clients = array
       user.save()
 
       // if(format == 'short' && email){
 
-      //   const params    = sendEstimateQuick( 
+      //   const params    = sendEstimateQuick(
       //     newEstimate.id,
       //     user.id,
       //     'https://middler.com',
-      //     email.toLowerCase(), 
+      //     email.toLowerCase(),
       //     user.businessLogo ? user.businessLogo : 'https://middler.com/assets/templogo.png',
-      //     user.businessName, 
+      //     user.businessName,
       //     user.businessAddress,
       //     user.estimatorName,
-      //     user.businessEmail, 
-      //     user.businessPhone ? user.businessPhone : '', 
-      //     estimate.adjustment 
-      //       ? 
+      //     user.businessEmail,
+      //     user.businessPhone ? user.businessPhone : '',
+      //     estimate.adjustment
+      //       ?
       //         estimate.interiorAdjusted.replace('$', '')
-      //       : 
+      //       :
       //       clientObject.interiorEstimate
       //         ?
       //         `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
       //         :
       //         '0'
-      //       , 
-      //     clientObject.adjustment 
-      //       ? 
+      //       ,
+      //     clientObject.adjustment
+      //       ?
       //         estimate.exteriorAdjusted.replace('$', '')
-      //       : 
+      //       :
       //       clientObject.exteriorEstimate
       //         ?
       //         `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
       //         :
       //         '0'
       //       ,
-      //     clientObject.adjustment 
-      //       ? 
+      //     clientObject.adjustment
+      //       ?
       //         estimate.cabinetAdjusted.replace('$', '')
-      //       : 
+      //       :
       //         clientObject.cabinetEstimate
       //         ?
       //         `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
       //         :
       //         '0'
       //       ,
-      //     clientObject.adjustment 
-      //       ? `${totalEstimateAdjustedNewEstimate(estimate)}` 
+      //     clientObject.adjustment
+      //       ? `${totalEstimateAdjustedNewEstimate(estimate)}`
       //       : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
       //     clientObject.clientName,
       //     clientObject.clientPhone ? clientObject.clientPhone : '',
@@ -2057,54 +2057,54 @@ UserSchema.statics.sqftEstimateLogin = async function( email, password, estimate
       //   )
       //   const command   = new SendEmailCommand(params)
       //   const response  = await ses.send(command)
-    
+
       //   console.log(response)
       // }
-  
+
       // if(format == 'short' && clientObject.clientEmail){
-      //   const params    = sendEstimateQuick( 
+      //   const params    = sendEstimateQuick(
       //     newEstimate.id,
       //     user.id,
       //     'https://middler.com',
-      //     clientObject.clientEmail, 
+      //     clientObject.clientEmail,
       //     user.businessLogo ? user.businessLogo : 'https://middler.com/assets/templogo.png',
-      //     user.businessName, 
+      //     user.businessName,
       //     user.businessAddress,
       //     user.estimatorName,
-      //     user.businessEmail, 
-      //     user.businessPhone ? user.businessPhone : '', 
-      //     estimate.adjustment 
-      //       ? 
+      //     user.businessEmail,
+      //     user.businessPhone ? user.businessPhone : '',
+      //     estimate.adjustment
+      //       ?
       //         estimate.interiorAdjusted.replace('$', '')
-      //       : 
+      //       :
       //       clientObject.interiorEstimate
       //         ?
       //         `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
       //         :
       //         '0'
-      //       , 
-      //     clientObject.adjustment 
-      //       ? 
+      //       ,
+      //     clientObject.adjustment
+      //       ?
       //         estimate.exteriorAdjusted.replace('$', '')
-      //       : 
+      //       :
       //       clientObject.exteriorEstimate
       //         ?
       //         `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
       //         :
       //         '0'
       //       ,
-      //     clientObject.adjustment 
-      //       ? 
+      //     clientObject.adjustment
+      //       ?
       //         estimate.cabinetAdjusted.replace('$', '')
-      //       : 
+      //       :
       //         clientObject.cabinetEstimate
       //         ?
       //         `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
       //         :
       //         '0'
       //       ,
-      //     clientObject.adjustment 
-      //       ? `${totalEstimateAdjustedNewEstimate(estimate)}` 
+      //     clientObject.adjustment
+      //       ? `${totalEstimateAdjustedNewEstimate(estimate)}`
       //       : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
       //     clientObject.clientName,
       //     clientObject.clientPhone ? clientObject.clientPhone : '',
@@ -2129,33 +2129,33 @@ UserSchema.statics.sqftEstimateLogin = async function( email, password, estimate
       //   )
       //   const command   = new SendEmailCommand(params)
       //   const response  = await ses.send(command)
-    
+
       //   console.log(response)
       // }
-  
-      const token                 = jwtMethod.sign({ id: user._id, email: email.toLowerCase() }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '24hr', algorithm: 'HS256' })
-  
-      
-      return { 
+
+      const token = jwtMethod.sign({ id: user._id, email: email.toLowerCase() }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '24hr', algorithm: 'HS256' })
+
+
+      return {
         id: newEstimate.id,
         token: token,
         username: user.estimatorName ? user.estimatorName : `${user.firstName} ${user.lastName}`,
         userID: user._id,
         emailVerified: user.emailVerified,
         message: 'Estimates sent and saved'
-       }
-  
+      }
+
     } else {
 
       CODE = 'FORBIDDEN'
-      
+
       throw new GraphQLError('Invalid password', {
         extensions: {
           code: CODE,
         }
       })
     }
-    
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -2167,11 +2167,11 @@ UserSchema.statics.sqftEstimateLogin = async function( email, password, estimate
 
 }
 
-UserSchema.statics.dashboardQuickEstimate = async function( id, estimate ){
-  
+UserSchema.statics.dashboardQuickEstimate = async function (id, estimate) {
+
   let CLIENT
-  let format              = 'short'
-  let CODE                = 'INTERNAL_SERVER_ERROR'
+  let format = 'short'
+  let CODE = 'INTERNAL_SERVER_ERROR'
 
   let clientObject = {
     adjustment: estimate.adjustment,
@@ -2228,84 +2228,84 @@ UserSchema.statics.dashboardQuickEstimate = async function( id, estimate ){
     dropCloths: estimate.dropCloths,
     notesAndDisclosure: estimate.notesAndDisclosure
   }
-  
+
   try {
 
-    const checkUser                                 = await this.findById(id)
+    const checkUser = await this.findById(id)
 
-    let array                                       = []
-    if(checkUser.clients.length > 0) array          = [...checkUser.clients]
+    let array = []
+    if (checkUser.clients.length > 0) array = [...checkUser.clients]
 
-    CLIENT                                          = await new Client({ ...clientObject }).save()
+    CLIENT = await new Client({ ...clientObject }).save()
     array.push(CLIENT.id)
 
-    if(clientObject.adjustment){
+    if (clientObject.adjustment) {
 
-      const foundEstimate                           = await Client.findById( CLIENT.id )
+      const foundEstimate = await Client.findById(CLIENT.id)
 
-      let adjustmentArray                           = [...foundEstimate.adjustments]
-      let newAdjustment                             = new Object()
-      newAdjustment.interiorAdjusted                = estimate.interiorAdjusted.replace('$', '')
-      newAdjustment.cabinetAdjusted                 = estimate.cabinetAdjusted.replace('$', '')
-      newAdjustment.exteriorAdjusted                = estimate.exteriorAdjusted.replace('$', '')
-      newAdjustment.dateAdjusted                    = new Date().toISOString()
+      let adjustmentArray = [...foundEstimate.adjustments]
+      let newAdjustment = new Object()
+      newAdjustment.interiorAdjusted = estimate.interiorAdjusted.replace('$', '')
+      newAdjustment.cabinetAdjusted = estimate.cabinetAdjusted.replace('$', '')
+      newAdjustment.exteriorAdjusted = estimate.exteriorAdjusted.replace('$', '')
+      newAdjustment.dateAdjusted = new Date().toISOString()
       adjustmentArray.push(newAdjustment)
-      
-      foundEstimate.adjustment                      = clientObject.adjustment
-      foundEstimate.adjustments                     = adjustmentArray
+
+      foundEstimate.adjustment = clientObject.adjustment
+      foundEstimate.adjustments = adjustmentArray
       foundEstimate.save()
 
     }
 
-    checkUser.clients                       = array
+    checkUser.clients = array
     checkUser.save()
 
-    if(!estimate.businessName && !estimate.businessEmail) format = 'minimal'
+    if (!estimate.businessName && !estimate.businessEmail) format = 'minimal'
 
-    if(format == 'short' && clientObject.clientEmail){
-      const params    = sendEstimateQuick( 
+    if (format == 'short' && clientObject.clientEmail) {
+      const params = sendEstimateQuick(
         CLIENT.id,
         id,
         'https://middler.com',
-        clientObject.clientEmail, 
+        clientObject.clientEmail,
         clientObject.businessLogo ? clientObject.businessLogo : 'https://middler.com/assets/templogo.png',
-        clientObject.businessName, 
+        clientObject.businessName,
         clientObject.businessAddress,
         clientObject.estimatorName,
-        clientObject.businessEmail, 
-        clientObject.businessPhone ? clientObject.businessPhone : '', 
-        clientObject.adjustment 
-          ? 
-            estimate.interiorAdjusted.replace('$', '')
-          : 
+        clientObject.businessEmail,
+        clientObject.businessPhone ? clientObject.businessPhone : '',
+        clientObject.adjustment
+          ?
+          estimate.interiorAdjusted.replace('$', '')
+          :
           clientObject.interiorEstimate
             ?
             `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          , 
-        clientObject.adjustment 
-          ? 
-            estimate.exteriorAdjusted.replace('$', '')
-          : 
+        ,
+        clientObject.adjustment
+          ?
+          estimate.exteriorAdjusted.replace('$', '')
+          :
           clientObject.exteriorEstimate
             ?
             `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? 
-            estimate.cabinetAdjusted.replace('$', '')
-          : 
-            clientObject.cabinetEstimate
+        ,
+        clientObject.adjustment
+          ?
+          estimate.cabinetAdjusted.replace('$', '')
+          :
+          clientObject.cabinetEstimate
             ?
             `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? `${totalEstimateAdjustedNewEstimate(estimate)}` 
+        ,
+        clientObject.adjustment
+          ? `${totalEstimateAdjustedNewEstimate(estimate)}`
           : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
         clientObject.clientName,
         clientObject.clientPhone ? clientObject.clientPhone : '',
@@ -2328,55 +2328,55 @@ UserSchema.statics.dashboardQuickEstimate = async function( id, estimate ){
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command   = new SendEmailCommand(params)
-      const response  = await ses.send(command)
-  
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
+
       console.log(response)
     }
 
-    if(format == 'minimal' && clientObject.clientEmail){
-      const params    = sendEstimateMinimal( 
+    if (format == 'minimal' && clientObject.clientEmail) {
+      const params = sendEstimateMinimal(
         CLIENT.id,
         id,
         'https://middler.com',
-        clientObject.clientEmail, 
+        clientObject.clientEmail,
         clientObject.businessLogo,
-        clientObject.businessName, 
-        clientObject.estimatorName, 
-        clientObject.businessEmail, 
-        clientObject.businessPhone ? clientObject.businessPhone : '', 
-        estimate.adjustment 
-          ? 
-            estimate.interiorAdjusted.replace('$', '')
-          : 
+        clientObject.businessName,
+        clientObject.estimatorName,
+        clientObject.businessEmail,
+        clientObject.businessPhone ? clientObject.businessPhone : '',
+        estimate.adjustment
+          ?
+          estimate.interiorAdjusted.replace('$', '')
+          :
           clientObject.interiorEstimate
             ?
             `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          , 
-        clientObject.adjustment 
-          ? 
-            estimate.exteriorAdjusted.replace('$', '')
-          : 
+        ,
+        clientObject.adjustment
+          ?
+          estimate.exteriorAdjusted.replace('$', '')
+          :
           clientObject.exteriorEstimate
             ?
             `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? 
-            estimate.cabinetAdjusted.replace('$', '')
-          : 
-            clientObject.cabinetEstimate
+        ,
+        clientObject.adjustment
+          ?
+          estimate.cabinetAdjusted.replace('$', '')
+          :
+          clientObject.cabinetEstimate
             ?
             `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? `${totalEstimateAdjustedNewEstimate(estimate)}` 
+        ,
+        clientObject.adjustment
+          ? `${totalEstimateAdjustedNewEstimate(estimate)}`
           : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
         clientObject.clientName,
         clientObject.clientPhone ? clientObject.clientPhone : '',
@@ -2399,17 +2399,17 @@ UserSchema.statics.dashboardQuickEstimate = async function( id, estimate ){
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command   = new SendEmailCommand(params)
-      const response  = await ses.send(command)
-  
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
+
       console.log(response)
     }
-    
+
     return {
       message: 'New estimate created',
       estimate: CLIENT
     }
-    
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -2418,23 +2418,23 @@ UserSchema.statics.dashboardQuickEstimate = async function( id, estimate ){
       },
     });
   }
-  
+
 }
 
-UserSchema.statics.adminSignup = async function( firstName, lastName, email, password, key ){
-  
-  if(key !== process.env.ADMIN_KEY){
+UserSchema.statics.adminSignup = async function (firstName, lastName, email, password, key) {
+
+  if (key !== process.env.ADMIN_KEY) {
 
     throw new GraphQLError(`Unauthorized access`, {
       extensions: {
         code: 'FORBIDDEN',
       },
     })
-    
+
   }
 
-  let newMembershipID     = generateRandomNumber()
-  
+  let newMembershipID = generateRandomNumber()
+
   let object = new Object({
     firstName: firstName,
     lastName: lastName,
@@ -2443,18 +2443,18 @@ UserSchema.statics.adminSignup = async function( firstName, lastName, email, pas
     membershipID: newMembershipID,
     role: 'admin'
   })
-  
-  for(let key in object){ if(!object[key]) delete object[key]}
-  
+
+  for (let key in object) { if (!object[key]) delete object[key] }
+
   try {
 
-    const checkEmail      = await this.findOne({ email: email })
+    const checkEmail = await this.findOne({ email: email })
 
     if (checkEmail) {
 
-      checkEmail.role     = 'admin'
+      checkEmail.role = 'admin'
       checkEmail.save()
-      
+
       throw new GraphQLError(`User with that email already exists. Login to continue`, {
         extensions: {
           code: 'FORBIDDEN',
@@ -2462,10 +2462,10 @@ UserSchema.statics.adminSignup = async function( firstName, lastName, email, pas
       })
     }
 
-    const user            = await new this({ ...object }).save()
-    
-    return { message: `User with email ${email} created`}
-    
+    const user = await new this({ ...object }).save()
+
+    return { message: `User with email ${email} created` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -2474,25 +2474,25 @@ UserSchema.statics.adminSignup = async function( firstName, lastName, email, pas
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.adminLogin = async function( email, password ){
-  
-  let CODE               = 'INTERNAL_SERVER_ERROR'              
-  
+UserSchema.statics.adminLogin = async function (email, password) {
+
+  let CODE = 'INTERNAL_SERVER_ERROR'
+
   try {
 
-    let user 
+    let user
 
-    if(email){
+    if (email) {
       user = await this.findOne({ email: email })
     }
 
     if (!user) {
 
       CODE = 'UNREGISTERED'
-      
+
       throw new GraphQLError('Email address entered is not registered. Sign up to continue.', {
         extensions: {
           code: 'UNREGISTERED',
@@ -2500,7 +2500,7 @@ UserSchema.statics.adminLogin = async function( email, password ){
       })
     }
 
-    if (user.role !== 'admin'){
+    if (user.role !== 'admin') {
 
       CODE = 'UNAUTHORIZED'
 
@@ -2517,9 +2517,9 @@ UserSchema.statics.adminLogin = async function( email, password ){
         if (err) {
 
           CODE = 'FORBIDDEN'
-          
+
           reject(err)
-          
+
         } else {
           resolve(match)
         }
@@ -2527,36 +2527,36 @@ UserSchema.statics.adminLogin = async function( email, password ){
     })
 
     if (isMatch) {
-      
+
       const token = jwtMethod.sign({ id: user._id, email: email }, process.env.JWT_SECRET_LOGIN, { expiresIn: '48hr', algorithm: 'HS256' })
-      const { _id  } = user
+      const { _id } = user
 
-      let userLoggedIn            = new Object()
+      let userLoggedIn = new Object()
 
-      if(user.role == 'disabled'){
+      if (user.role == 'disabled') {
         console.log('ERROR DISABLED')
 
         CODE = 'DISABLED'
-        
+
         throw new GraphQLError('Account is disabled', {
           extensions: {
             code: CODE,
           }
         })
-        
+
       }
 
-      userLoggedIn.id             = _id
-      userLoggedIn.token          = token
-      userLoggedIn.username       = user.estimatorName ? user.estimatorName : `${user.firstName} ${user.lasstName}`
-      userLoggedIn.message        = 'Logged in'
+      userLoggedIn.id = _id
+      userLoggedIn.token = token
+      userLoggedIn.username = user.estimatorName ? user.estimatorName : `${user.firstName} ${user.lasstName}`
+      userLoggedIn.message = 'Logged in'
 
       return userLoggedIn
-  
+
     } else {
 
       CODE = 'FORBIDDEN'
-      
+
       throw new GraphQLError('Invalid password', {
         extensions: {
           code: CODE,
@@ -2573,17 +2573,17 @@ UserSchema.statics.adminLogin = async function( email, password ){
       }
     })
   }
-  
+
 }
 
-UserSchema.statics.checkAccount = async function( email ){
+UserSchema.statics.checkAccount = async function (email) {
 
-  let CODE                = 'INTERNAL_SERVER_ERROR'
-  let newMembershipID     = generateRandomNumber()
-  let pin                 = generateSixDigitPin()
-  let expirationDate      = new Date()
+  let CODE = 'INTERNAL_SERVER_ERROR'
+  let newMembershipID = generateRandomNumber()
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
-  
+
   let userObject = {
     email: email.toLowerCase(),
     membershipID: newMembershipID,
@@ -2592,13 +2592,13 @@ UserSchema.statics.checkAccount = async function( email ){
   }
 
   try {
-    
+
     const checkEmail = await this.findOne({ email: email.toLowerCase() })
 
     if (checkEmail) {
 
-      CODE                                            = 'ACCOUNT_EXISTS'
-      
+      CODE = 'ACCOUNT_EXISTS'
+
       throw new GraphQLError(`User with that email already exists, login to continue`, {
         extensions: {
           code: CODE
@@ -2606,17 +2606,17 @@ UserSchema.statics.checkAccount = async function( email ){
       })
 
     }
-    
-    const user                = await new this({ ...userObject }).save()
 
-    const params              = verifyEmail( email.toLowerCase(), 'user', user.lastName, pin )
-    const command             = new SendEmailCommand(params)
-    const response            = await ses.send(command)
+    const user = await new this({ ...userObject }).save()
+
+    const params = verifyEmail(email.toLowerCase(), 'user', user.lastName, pin)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
-    
-    return { message: `Enter the verification code we sent to ${email}`}
-    
+
+    return { message: `Enter the verification code we sent to ${email}` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -2625,10 +2625,10 @@ UserSchema.statics.checkAccount = async function( email ){
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.forgotPasswordAdmin = async function( email ){
+UserSchema.statics.forgotPasswordAdmin = async function (email) {
 
   try {
 
@@ -2642,14 +2642,14 @@ UserSchema.statics.forgotPasswordAdmin = async function( email ){
       });
     }
 
-    const token = jwtMethod.sign({ id: user._id }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', {expiresIn: '1hr', algorithm: 'HS256'})
+    const token = jwtMethod.sign({ id: user._id }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '1hr', algorithm: 'HS256' })
 
-    const params    = forgotPassword( email, 'https://admin.middler.com', token )
-    const command   = new SendEmailCommand(params)
-    const response  = await ses.send(command)
+    const params = forgotPassword(email, 'https://admin.middler.com', token)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
-    return { message: `Reset password email sent to ${email}`}
-    
+    return { message: `Reset password email sent to ${email}` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -2658,19 +2658,19 @@ UserSchema.statics.forgotPasswordAdmin = async function( email ){
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.updatePasswordAdmin = async function( newPassword, id, token ){
+UserSchema.statics.updatePasswordAdmin = async function (newPassword, id, token) {
 
   try {
 
     jwtMethod.verify(token, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K')
 
-    const user                = await User.findById(id)
-    
-    const isSamePassword      = await bcrypt.compare(newPassword, user.password)
-    
+    const user = await User.findById(id)
+
+    const isSamePassword = await bcrypt.compare(newPassword, user.password)
+
     if (isSamePassword) {
       throw new GraphQLError('New password cannot be the same as the current password', {
         extensions: {
@@ -2679,13 +2679,13 @@ UserSchema.statics.updatePasswordAdmin = async function( newPassword, id, token 
       });
     }
 
-    user.password               = newPassword
+    user.password = newPassword
     await user.save()
-    
+
 
     return { message: 'Password updated successfully' }
-    
-    
+
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -2694,26 +2694,26 @@ UserSchema.statics.updatePasswordAdmin = async function( newPassword, id, token 
       },
     })
   }
-  
+
 }
 
-UserSchema.statics.quickEstimateClient = async function( estimate ){
-  
+UserSchema.statics.quickEstimateClient = async function (estimate) {
+
   let CLIENT
   let newEstimate
-  let format              = 'short'
-  let message             = 'Estimate sent'
-  let CODE                = 'INTERNAL_SERVER_ERROR'
-  let newMembershipID     = generateRandomNumber()
-  let pin                 = generateSixDigitPin()
-  let expirationDate      = new Date()
+  let format = 'short'
+  let message = 'Estimate sent'
+  let CODE = 'INTERNAL_SERVER_ERROR'
+  let newMembershipID = generateRandomNumber()
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
 
   let clientObject = {
     clientName: estimate.clientName,
     clientPhone: estimate.clientPhone,
     clientPropertyAddress: estimate.clientPropertyAddress,
-    clientEmail: estimate.businessEmail,
+    clientEmail: estimate.clientEmail,
     clientZipCode: estimate.clientZipCode,
     interiorSquareFeet: estimate.interiorSquareFeet,
     interiorCondition: estimate.interiorCondition,
@@ -2755,18 +2755,18 @@ UserSchema.statics.quickEstimateClient = async function( estimate ){
     adjustment: estimate.adjustment,
     userType: estimate.userType
   }
-  
+
   try {
 
-    CLIENT                                          = await new Client({ ...clientObject }).save()
+    CLIENT = await new Client({ ...clientObject }).save()
 
     message = 'Estimate generated'
-    
-    return { 
+
+    return {
       message: message,
       id: CLIENT._id
-     }
-    
+    }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -2775,21 +2775,21 @@ UserSchema.statics.quickEstimateClient = async function( estimate ){
       },
     });
   }
-  
+
 }
 
-UserSchema.statics.saveEstimate = async function( email, estimateID ){
+UserSchema.statics.saveEstimate = async function (email, estimateID) {
 
-  let CODE                = 'INTERNAL_SERVER_ERROR'
+  let CODE = 'INTERNAL_SERVER_ERROR'
   let CLIENT
-  let newMembershipID     = generateRandomNumber()
-  let pin                 = generateSixDigitPin()
-  let expirationDate      = new Date()
+  let newMembershipID = generateRandomNumber()
+  let pin = generateSixDigitPin()
+  let expirationDate = new Date()
   expirationDate.setTime(expirationDate.getTime() + 15 * 60 * 1000)
-  
+
   try {
 
-    const CLIENT = await Client.findById( estimateID )
+    const CLIENT = await Client.findById(estimateID)
 
     let userObject = {
       email: email.toLowerCase(),
@@ -2810,33 +2810,33 @@ UserSchema.statics.saveEstimate = async function( email, estimateID ){
       clientName: CLIENT.clientName,
       clientPhone: CLIENT.clientPhone,
       clientPropertyAddress: CLIENT.clientPropertyAddress,
-      clientEmail: CLIENT.businessEmail,
+      clientEmail: CLIENT.clientEmail,
       clientZipCode: CLIENT.clientZipCode,
       interiorSquareFeet: CLIENT.interiorSquareFeet,
       interiorCondition: CLIENT.interiorCondition,
       interiorDetail: CLIENT.interiorDetail,
       interiorItems: CLIENT.interiorItems,
       interiorIndividualItems: CLIENT.interiorIndividualItems,
-      interiorEstimate: await calculateInteriorEstimate(CLIENT),
-      interiorGallons: calculateInteriorGallonsCost(CLIENT).gallons,
-      interiorGallonsCost: calculateInteriorGallonsCost(CLIENT).gallonsCost,
-      interiorGallonsItems: calculateInteriorGallonsCost(CLIENT).gallonsRequired,
+      interiorEstimate: CLIENT.interiorEstimate || await calculateInteriorEstimate(CLIENT),
+      interiorGallons: CLIENT.interiorGallons || calculateInteriorGallonsCost(CLIENT).gallons,
+      interiorGallonsCost: CLIENT.interiorGallonsCost || calculateInteriorGallonsCost(CLIENT).gallonsCost,
+      interiorGallonsItems: CLIENT.interiorGallonsItems || calculateInteriorGallonsCost(CLIENT).gallonsRequired,
       doorsAndDrawers: CLIENT.doorsAndDrawers,
       insideCabinet: CLIENT.insideCabinet,
       cabinetCondition: CLIENT.cabinetCondition,
       cabinetDetail: CLIENT.cabinetDetail,
-      cabinetEstimate: await calculateCabinetsEstimate(CLIENT),
-      cabinetGallons: calculateCabinetsGallonsCost(CLIENT).gallons,
-      cabinetGallonsCost: calculateCabinetsGallonsCost(CLIENT).gallonsCost,
+      cabinetEstimate: CLIENT.cabinetEstimate || await calculateCabinetsEstimate(CLIENT),
+      cabinetGallons: CLIENT.cabinetGallons || calculateCabinetsGallonsCost(CLIENT).gallons,
+      cabinetGallonsCost: CLIENT.cabinetGallonsCost || calculateCabinetsGallonsCost(CLIENT).gallonsCost,
       exteriorSquareFeet: CLIENT.exteriorSquareFeet,
       exteriorCondition: CLIENT.exteriorCondition,
       exteriorDetail: CLIENT.exteriorDetail,
       exteriorItems: CLIENT.exteriorItems,
       exteriorIndividualItems: CLIENT.exteriorIndividualItems,
-      exteriorEstimate: await calculateExteriorEstimate(CLIENT),
-      exteriorGallons: calculateExteriorGallonsCost(CLIENT).gallons,
-      exteriorGallonsCost: calculateExteriorGallonsCost(CLIENT).gallonsCost,
-      exteriorGallonsItems: calculateExteriorGallonsCost(CLIENT).gallonsRequired,
+      exteriorEstimate: CLIENT.exteriorEstimate || await calculateExteriorEstimate(CLIENT),
+      exteriorGallons: CLIENT.exteriorGallons || calculateExteriorGallonsCost(CLIENT).gallons,
+      exteriorGallonsCost: CLIENT.exteriorGallonsCost || calculateExteriorGallonsCost(CLIENT).gallonsCost,
+      exteriorGallonsItems: CLIENT.exteriorGallonsItems || calculateExteriorGallonsCost(CLIENT).gallonsRequired,
       painters: CLIENT.painters,
       hoursPerDay: CLIENT.hoursPerDay,
       days: CLIENT.days,
@@ -2852,53 +2852,53 @@ UserSchema.statics.saveEstimate = async function( email, estimateID ){
       adjustment: CLIENT.adjustment,
       userType: CLIENT.userType
     }
-    
+
     const checkEmail = await this.findOne({ email: email.toLowerCase() })
 
     if (checkEmail) {
 
-      let array                                       = []
-      if(checkEmail.clients.length > 0) array         = [...checkEmail.clients]
+      let array = []
+      if (checkEmail.clients.length > 0) array = [...checkEmail.clients]
       array.push(CLIENT.id)
 
-      checkEmail.clients                              = array
+      checkEmail.clients = array
       checkEmail.save()
 
-      const params    = saveEstimate( 
+      const params = saveEstimate(
         'https://middler.com',
         email,
-        clientObject.adjustment 
-          ? 
-            clientObject.interiorAdjusted.replace('$', '')
-          : 
+        clientObject.adjustment
+          ?
+          clientObject.interiorAdjusted.replace('$', '')
+          :
           clientObject.interiorEstimate
             ?
             `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          , 
-        clientObject.adjustment 
-          ? 
-            clientObject.exteriorAdjusted.replace('$', '')
-          : 
+        ,
+        clientObject.adjustment
+          ?
+          clientObject.exteriorAdjusted.replace('$', '')
+          :
           clientObject.exteriorEstimate
             ?
             `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? 
-            clientObject.cabinetAdjusted.replace('$', '')
-          : 
-            clientObject.cabinetEstimate
+        ,
+        clientObject.adjustment
+          ?
+          clientObject.cabinetAdjusted.replace('$', '')
+          :
+          clientObject.cabinetEstimate
             ?
             `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
             :
             '0'
-          ,
-        clientObject.adjustment 
-          ? `${totalEstimateAdjustedNewEstimate(clientObject)}` 
+        ,
+        clientObject.adjustment
+          ? `${totalEstimateAdjustedNewEstimate(clientObject)}`
           : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
         clientObject.clientName,
         clientObject.clientPhone ? clientObject.clientPhone.replace('+1', '') : '',
@@ -2907,22 +2907,22 @@ UserSchema.statics.saveEstimate = async function( email, estimateID ){
         clientObject.notesAndDisclosure ? clientObject.notesAndDisclosure : '',
         clientObject.interiorSquareFeet,
         clientObject.interiorCondition?.replace(/_/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
         clientObject.interiorDetail?.replace(/_/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
         clientObject.interiorItems,
         clientObject.interiorIndividualItems,
         clientObject.doorsAndDrawers,
         clientObject.insideCabinet,
         clientObject.cabinetCondition?.replace(/_/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
         clientObject.cabinetDetail?.replace(/_/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
         clientObject.exteriorSquareFeet,
         clientObject.exteriorCondition?.replace(/_/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
         clientObject.exteriorDetail?.replace(/_/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
         clientObject.exteriorItems,
         clientObject.exteriorIndividualItems,
         clientObject.paintBrand,
@@ -2935,13 +2935,13 @@ UserSchema.statics.saveEstimate = async function( email, estimateID ){
         clientObject.dropCloths
       )
 
-      const command   = new SendEmailCommand(params)
-      const response  = await ses.send(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
 
       CODE = 'ACCOUNT_EXISTS'
-      
+
       throw new GraphQLError(`User with that email already exists estimate saved to account`, {
         extensions: {
           code: CODE
@@ -2950,48 +2950,48 @@ UserSchema.statics.saveEstimate = async function( email, estimateID ){
 
     }
 
-    let array       = []
+    let array = []
     array.push(CLIENT.id)
 
-    userObject.clients    = array
-    
-    const user    = await new this({ ...userObject }).save()
+    userObject.clients = array
 
-    const params    = saveEstimate( 
+    const user = await new this({ ...userObject }).save()
+
+    const params = saveEstimate(
       'https://middler.com',
       email,
-      clientObject.adjustment 
-        ? 
-          clientObject.interiorAdjusted.replace('$', '')
-        : 
+      clientObject.adjustment
+        ?
+        clientObject.interiorAdjusted.replace('$', '')
+        :
         clientObject.interiorEstimate
           ?
           `${parseInt(clientObject.interiorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
           :
           '0'
-        , 
-      clientObject.adjustment 
-        ? 
-          clientObject.exteriorAdjusted.replace('$', '')
-        : 
+      ,
+      clientObject.adjustment
+        ?
+        clientObject.exteriorAdjusted.replace('$', '')
+        :
         clientObject.exteriorEstimate
           ?
           `${parseInt(clientObject.exteriorEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
           :
           '0'
-        ,
-      clientObject.adjustment 
-        ? 
-          clientObject.cabinetAdjusted.replace('$', '')
-        : 
-          clientObject.cabinetEstimate
+      ,
+      clientObject.adjustment
+        ?
+        clientObject.cabinetAdjusted.replace('$', '')
+        :
+        clientObject.cabinetEstimate
           ?
           `${parseInt(clientObject.cabinetEstimate.replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
           :
           '0'
-        ,
-      clientObject.adjustment 
-        ? `${totalEstimateAdjustedNewEstimate(clientObject)}` 
+      ,
+      clientObject.adjustment
+        ? `${totalEstimateAdjustedNewEstimate(clientObject)}`
         : `${parseInt(totalEstimate(clientObject).replace(/,/g, ''), 10).toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
       clientObject.clientName,
       clientObject.clientPhone ? clientObject.clientPhone.replace('+1', '') : '',
@@ -3000,22 +3000,22 @@ UserSchema.statics.saveEstimate = async function( email, estimateID ){
       clientObject.notesAndDisclosure ? clientObject.notesAndDisclosure : '',
       clientObject.interiorSquareFeet,
       clientObject.interiorCondition?.replace(/_/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
       clientObject.interiorDetail?.replace(/_/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
       clientObject.interiorItems,
       clientObject.interiorIndividualItems,
       clientObject.doorsAndDrawers,
       clientObject.insideCabinet,
       clientObject.cabinetCondition?.replace(/_/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
       clientObject.cabinetDetail?.replace(/_/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
       clientObject.exteriorSquareFeet,
       clientObject.exteriorCondition?.replace(/_/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
       clientObject.exteriorDetail?.replace(/_/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
       clientObject.exteriorItems,
       clientObject.exteriorIndividualItems,
       clientObject.paintBrand,
@@ -3028,13 +3028,13 @@ UserSchema.statics.saveEstimate = async function( email, estimateID ){
       clientObject.dropCloths
     )
 
-    const command   = new SendEmailCommand(params)
-    const response  = await ses.send(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
 
-    return { message: `Account created estimate sent to your email`}
-    
+    return { message: `Account created estimate sent to your email` }
+
   } catch (error) {
     console.log(error)
     throw new GraphQLError(error.message, {
@@ -3043,7 +3043,7 @@ UserSchema.statics.saveEstimate = async function( email, estimateID ){
       },
     })
   }
-  
+
 }
 
 const User = mongoose.model('User', UserSchema);

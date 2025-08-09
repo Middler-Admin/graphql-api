@@ -15,21 +15,21 @@ const config = {
 const ses = new SESClient(config)
 
 //// TYPES
-const UserType                        = require('../types/userType')
-const VerificationType                = require('../types/verificationType')
-const MessageType                     = require('../types/messageType')
-const EstimatorInputType              = require('../types/estimatorInputType')
-const TimeEstimateInputType           = require('../types/timeEstimateInputType')
-const SingleEstimateOutputType        = require('../types/singleEstimateOutputType')
-const SingleTimeEstimateOutputType    = require('../types/singleTimeEstimateOutputType')
-const PaymentInfoType                 = require('../types/paymentInfoType')
+const UserType = require('../types/userType')
+const VerificationType = require('../types/verificationType')
+const MessageType = require('../types/messageType')
+const EstimatorInputType = require('../types/estimatorInputType')
+const TimeEstimateInputType = require('../types/timeEstimateInputType')
+const SingleEstimateOutputType = require('../types/singleEstimateOutputType')
+const SingleTimeEstimateOutputType = require('../types/singleTimeEstimateOutputType')
+const PaymentInfoType = require('../types/paymentInfoType')
 
 //// DATA MODELS
-const User                      = require('../models/user')
-const Client                    = require('../models/client')
-const Payment                   = require('../models/payments')
-const Promotion                 = require('../models/promotions')
-const Time                      = require('../models/time');
+const User = require('../models/user')
+const Client = require('../models/client')
+const Payment = require('../models/payments')
+const Promotion = require('../models/promotions')
+const Time = require('../models/time');
 const SubscribedUser = require('../models/subscribedUser');
 const { thankYouForSubscribing } = require('../templates/thankYou');
 
@@ -46,8 +46,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { firstName, lastName, email, password }) {
 
-        return User.signup( firstName, lastName, email, password )
-        
+        return User.signup(firstName, lastName, email, password)
+
       }
     },
     noPasswordSignup: {
@@ -58,8 +58,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, estimate }) {
 
-        return User.noPasswordSignup( email, estimate )
-        
+        return User.noPasswordSignup(email, estimate)
+
       }
     },
     firstEstimate: {
@@ -70,8 +70,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, estimate }) {
 
-        return User.firstEstimate( email, estimate )
-        
+        return User.firstEstimate(email, estimate)
+
       }
     },
     verifyEmail: {
@@ -80,10 +80,10 @@ const mutation = new GraphQLObjectType({
         checkID: { type: GraphQLString },
         token: { type: GraphQLString }
       },
-      async resolve(parentValue, { checkID, token }){
-        
-        return User.verifyEmail( checkID, token )
-        
+      async resolve(parentValue, { checkID, token }) {
+
+        return User.verifyEmail(checkID, token)
+
       }
     },
     pinEmailVerification: {
@@ -92,10 +92,10 @@ const mutation = new GraphQLObjectType({
         pin: { type: new GraphQLList(GraphQLString) },
         email: { type: GraphQLString }
       },
-      async resolve(parentValue, { pin, email }){
-        
-        return User.pinEmailVerification( pin, email )
-        
+      async resolve(parentValue, { pin, email }) {
+
+        return User.pinEmailVerification(pin, email)
+
       }
     },
     verificationEmail: {
@@ -104,10 +104,10 @@ const mutation = new GraphQLObjectType({
         email: { type: GraphQLString },
         clientId: { type: GraphQLString }
       },
-      async resolve(parentValue, { email, clientId }){
-        
-        return User.sendVerificationEmail( email, clientId )
-        
+      async resolve(parentValue, { email, clientId }) {
+
+        return User.sendVerificationEmail(email, clientId)
+
       }
     },
     newPinVerification: {
@@ -115,10 +115,10 @@ const mutation = new GraphQLObjectType({
       args: {
         email: { type: GraphQLString }
       },
-      async resolve(parentValue, { email }){
-        
-        return User.newPinVerification( email )
-        
+      async resolve(parentValue, { email }) {
+
+        return User.newPinVerification(email)
+
       }
     },
     setPassword: {
@@ -127,10 +127,10 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      async resolve(parentValue, { id, password }){
+      async resolve(parentValue, { id, password }) {
 
-        return User.setPassword( id, password )
-        
+        return User.setPassword(id, password)
+
       }
     },
     userLogin: {
@@ -139,51 +139,51 @@ const mutation = new GraphQLObjectType({
         email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      async resolve(parentValue, { email, password }){
-        
-        return User.login( email, password )
-        
+      async resolve(parentValue, { email, password }) {
+
+        return User.login(email, password)
+
       }
     },
     adjustPrice: {
       type: SingleEstimateOutputType,
-      args: { 
+      args: {
         id: { type: GraphQLString },
         interiorAdjusted: { type: GraphQLString },
         cabinetAdjusted: { type: GraphQLString },
         exteriorAdjusted: { type: GraphQLString },
         adjustment: { type: GraphQLBoolean }
       },
-      async resolve(parentValue, { id, interiorAdjusted, cabinetAdjusted, exteriorAdjusted, adjustment }){
+      async resolve(parentValue, { id, interiorAdjusted, cabinetAdjusted, exteriorAdjusted, adjustment }) {
 
-        return Client.addAdjustment( id, interiorAdjusted, cabinetAdjusted, exteriorAdjusted, adjustment )
-        
+        return Client.addAdjustment(id, interiorAdjusted, cabinetAdjusted, exteriorAdjusted, adjustment)
+
       }
     },
     updateDisclosure: {
       type: SingleEstimateOutputType,
-      args: { 
+      args: {
         id: { type: GraphQLString },
         notesAndDisclosure: { type: GraphQLString }
       },
-      async resolve(parentValue, { id, notesAndDisclosure }){
+      async resolve(parentValue, { id, notesAndDisclosure }) {
 
-        return Client.updateDisclosure( id, notesAndDisclosure )
-        
+        return Client.updateDisclosure(id, notesAndDisclosure)
+
       }
     },
     sendEstimate: {
       type: SingleEstimateOutputType,
-      args: { 
+      args: {
         userID: { type: GraphQLString },
         clientID: { type: GraphQLString },
         email: { type: GraphQLString },
         format: { type: GraphQLString }
       },
-      async resolve(parentValue, { userID, clientID, email, format }){
-        
-        return Client.sendEstimate( userID, clientID, email, format )
-        
+      async resolve(parentValue, { userID, clientID, email, format }) {
+
+        return Client.sendEstimate(userID, clientID, email, format)
+
       }
     },
     updateLogo: {
@@ -192,10 +192,10 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLString },
         url: { type: GraphQLString }
       },
-      async resolve(parentValue, { id, url }){
+      async resolve(parentValue, { id, url }) {
 
-        return User.updateLogo( id, url )
-        
+        return User.updateLogo(id, url)
+
       }
     },
     deletePendingLogo: {
@@ -203,10 +203,10 @@ const mutation = new GraphQLObjectType({
       args: {
         url: { type: GraphQLString }
       },
-      async resolve(parentValue, { url }){
+      async resolve(parentValue, { url }) {
 
-        return User.deletePendingLogo( url )
-        
+        return User.deletePendingLogo(url)
+
       }
     },
     updateBusinessInformation: {
@@ -222,10 +222,10 @@ const mutation = new GraphQLObjectType({
         businessLicenseNumber: { type: GraphQLString },
         businessInstagram: { type: GraphQLString }
       },
-      async resolve(parentValue, { id, businessName, estimatorName, businessAddress, businessPhone, businessEmail, businessWebsite, businessLicenseNumber, businessInstagram }){
+      async resolve(parentValue, { id, businessName, estimatorName, businessAddress, businessPhone, businessEmail, businessWebsite, businessLicenseNumber, businessInstagram }) {
 
-        return User.updateBusinessInformation( id, businessName, estimatorName, businessAddress, businessPhone, businessEmail, businessWebsite, businessLicenseNumber, businessInstagram )
-        
+        return User.updateBusinessInformation(id, businessName, estimatorName, businessAddress, businessPhone, businessEmail, businessWebsite, businessLicenseNumber, businessInstagram)
+
       }
     },
     updatePersonalInformation: {
@@ -237,10 +237,10 @@ const mutation = new GraphQLObjectType({
         email: { type: GraphQLString },
         bio: { type: GraphQLString },
       },
-      async resolve(parentValue, { id, firstName, lastName, email, bio }){
+      async resolve(parentValue, { id, firstName, lastName, email, bio }) {
 
-        return User.updatePersonalInformation( id, firstName, lastName, email, bio )
-        
+        return User.updatePersonalInformation(id, firstName, lastName, email, bio)
+
       }
     },
     createEstimate: {
@@ -251,8 +251,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { id, estimate }) {
 
-        return User.createEstimate( id, estimate )
-        
+        return User.createEstimate(id, estimate)
+
       }
     },
     originalEstimate: {
@@ -263,8 +263,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { id, adjustment }) {
 
-        return Client.originalEstimate( id, adjustment )
-        
+        return Client.originalEstimate(id, adjustment)
+
       }
     },
     updateEstimate: {
@@ -276,8 +276,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { userID, clientID, estimate }) {
 
-        return Client.updateEstimate( userID, clientID, estimate )
-        
+        return Client.updateEstimate(userID, clientID, estimate)
+
       }
     },
     deleteEstimate: {
@@ -285,10 +285,10 @@ const mutation = new GraphQLObjectType({
       args: {
         id: { type: GraphQLString }
       },
-      async resolve(parentValue, { id }){
+      async resolve(parentValue, { id }) {
 
-        return Client.deleteEstimate( id )
-        
+        return Client.deleteEstimate(id)
+
       }
     },
     paymentIntent: {
@@ -299,10 +299,10 @@ const mutation = new GraphQLObjectType({
         name: { type: GraphQLString },
         email: { type: GraphQLString }
       },
-      async resolve(parentValue, { id, paymentPlan, name, email }){
+      async resolve(parentValue, { id, paymentPlan, name, email }) {
 
-        return Client.deleteEstimate( id, paymentPlan, name, email )
-        
+        return Client.deleteEstimate(id, paymentPlan, name, email)
+
       }
     },
     setupClientSecret: {
@@ -314,10 +314,10 @@ const mutation = new GraphQLObjectType({
         paymentPlan: { type: GraphQLString },
         code: { type: GraphQLString }
       },
-      async resolve(parentValue, { id, email, name, paymentPlan, code }){
+      async resolve(parentValue, { id, email, name, paymentPlan, code }) {
 
-        return User.setupClientSecret( id, email, name, paymentPlan, code )
-        
+        return User.setupClientSecret(id, email, name, paymentPlan, code)
+
       }
     },
     subscriptionInfo: {
@@ -326,10 +326,10 @@ const mutation = new GraphQLObjectType({
         subscriptionID: { type: GraphQLString },
         paymentIntent: { type: GraphQLString }
       },
-      async resolve(parentValue, { subscriptionID, paymentIntent }){
+      async resolve(parentValue, { subscriptionID, paymentIntent }) {
 
-        return Payment.subscriptionInfo( subscriptionID, paymentIntent )
-        
+        return Payment.subscriptionInfo(subscriptionID, paymentIntent)
+
       }
     },
     createPromotion: {
@@ -342,10 +342,10 @@ const mutation = new GraphQLObjectType({
         description: { type: GraphQLString },
         affiliate: { type: GraphQLString }
       },
-      async resolve(parentValue, { type, code, plan, days, description, affiliate }){
+      async resolve(parentValue, { type, code, plan, days, description, affiliate }) {
 
-        return Promotion.createPromotion( type, code, plan, days, description, affiliate )
-        
+        return Promotion.createPromotion(type, code, plan, days, description, affiliate)
+
       }
     },
     applyCode: {
@@ -355,10 +355,10 @@ const mutation = new GraphQLObjectType({
         code: { type: GraphQLString },
         paymentPlan: { type: GraphQLString }
       },
-      async resolve(parentValue, { id, code, paymentPlan }){
+      async resolve(parentValue, { id, code, paymentPlan }) {
 
-        return Promotion.applyCode( id, code, paymentPlan )
-        
+        return Promotion.applyCode(id, code, paymentPlan)
+
       }
     },
     forgotPassword: {
@@ -366,10 +366,10 @@ const mutation = new GraphQLObjectType({
       args: {
         email: { type: GraphQLString }
       },
-      async resolve(parentValue, { email }){
+      async resolve(parentValue, { email }) {
 
-        return User.forgotPassword( email )
-        
+        return User.forgotPassword(email)
+
       }
     },
     updatePassword: {
@@ -379,10 +379,10 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLString },
         token: { type: GraphQLString }
       },
-      async resolve( parentValue, { newPassword, id, token }){
+      async resolve(parentValue, { newPassword, id, token }) {
 
-        return User.updatePassword( newPassword, id, token )
-        
+        return User.updatePassword(newPassword, id, token)
+
       }
     },
     cancelSubscription: {
@@ -390,10 +390,10 @@ const mutation = new GraphQLObjectType({
       args: {
         subscriptionID: { type: GraphQLString }
       },
-      async resolve( parentValue, { subscriptionID }){
+      async resolve(parentValue, { subscriptionID }) {
 
-        return Payment.cancelSubscription( subscriptionID )
-        
+        return Payment.cancelSubscription(subscriptionID)
+
       }
     },
     getEstimate: {
@@ -403,9 +403,9 @@ const mutation = new GraphQLObjectType({
         painter: { type: GraphQLString }
       },
       async resolve(parentValue, { id, painter }) {
-        
-        return Client.getEstimate( id, painter )
-        
+
+        return Client.getEstimate(id, painter)
+
       }
     },
     contactMiddler: {
@@ -415,9 +415,9 @@ const mutation = new GraphQLObjectType({
         message: { type: GraphQLString }
       },
       async resolve(parentValue, { email, message }) {
-        
-        return User.contactMiddler( email, message )
-        
+
+        return User.contactMiddler(email, message)
+
       }
     },
     resumeSubscription: {
@@ -426,9 +426,9 @@ const mutation = new GraphQLObjectType({
         subscriptionID: { type: GraphQLString }
       },
       async resolve(parentValue, { subscriptionID }) {
-        
-        return Payment.resumeSubscription( subscriptionID )
-        
+
+        return Payment.resumeSubscription(subscriptionID)
+
       }
     },
     changePassword: {
@@ -439,9 +439,9 @@ const mutation = new GraphQLObjectType({
         newPassword: { type: GraphQLString }
       },
       async resolve(parentValue, { id, currentPassword, newPassword }) {
-        
-        return User.changePassword( id, currentPassword, newPassword )
-        
+
+        return User.changePassword(id, currentPassword, newPassword)
+
       }
     },
     disableAccount: {
@@ -450,9 +450,9 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLString }
       },
       async resolve(parentValue, { id }) {
-        
-        return User.disableAccount( id )
-        
+
+        return User.disableAccount(id)
+
       }
     },
     activateAccount: {
@@ -462,9 +462,9 @@ const mutation = new GraphQLObjectType({
         password: { type: GraphQLString }
       },
       async resolve(parentValue, { email, password }) {
-        
-        return User.activateAccount( email, password )
-        
+
+        return User.activateAccount(email, password)
+
       }
     },
     adminSignup: {
@@ -478,8 +478,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { firstName, lastName, email, password, key }) {
 
-        return User.adminSignup( firstName, lastName, email, password, key )
-        
+        return User.adminSignup(firstName, lastName, email, password, key)
+
       }
     },
     adminLogin: {
@@ -488,23 +488,23 @@ const mutation = new GraphQLObjectType({
         email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      async resolve(parentValue, { email, password }){
-        
-        return User.adminLogin( email, password )
-        
+      async resolve(parentValue, { email, password }) {
+
+        return User.adminLogin(email, password)
+
       }
     },
     quickEstimate: {
       type: SingleEstimateOutputType,
-      args: { 
+      args: {
         emailDestination: { type: GraphQLString },
         recentClient: { type: GraphQLString },
         estimate: { type: EstimatorInputType }
       },
-      async resolve(parentValue, { emailDestination, recentClient, estimate }){
+      async resolve(parentValue, { emailDestination, recentClient, estimate }) {
 
-        return User.quickEstimate( emailDestination, recentClient, estimate )
-        
+        return User.quickEstimate(emailDestination, recentClient, estimate)
+
       }
     },
     sqftEstimateLogin: {
@@ -515,34 +515,34 @@ const mutation = new GraphQLObjectType({
         estimate: { type: EstimatorInputType }
       },
       async resolve(parentValue, { email, password, estimate }) {
-        
-        return User.sqftEstimateLogin( email, password, estimate )
-        
+
+        return User.sqftEstimateLogin(email, password, estimate)
+
       }
     },
     sqftAutoSend: {
       type: SingleEstimateOutputType,
-      args: { 
+      args: {
         emailDestination: { type: GraphQLString },
         token: { type: GraphQLString },
         estimate: { type: EstimatorInputType }
       },
-      async resolve(parentValue, { emailDestination, token, estimate }){
-        
+      async resolve(parentValue, { emailDestination, token, estimate }) {
+
         jwtMethod.verify(token, process.env.JWT_SECRET_VERIFY)
-        
-        return User.quickEstimate( emailDestination, estimate )
-        
+
+        return User.quickEstimate(emailDestination, estimate)
+
       }
     },
     getCalculations: {
       type: SingleEstimateOutputType,
-      args: { 
+      args: {
         estimate: { type: EstimatorInputType }
       },
-      async resolve(parentValue, { estimate }){
-        return Client.getCalculations( estimate )
-        
+      async resolve(parentValue, { estimate }) {
+        return Client.getCalculations(estimate)
+
       }
     },
     getPaintCard: {
@@ -551,9 +551,9 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLString }
       },
       async resolve(parentValue, { id }) {
-        
-        return Client.getPaintCard( id )
-        
+
+        return Client.getPaintCard(id)
+
       }
     },
     checkAccount: {
@@ -563,8 +563,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email }) {
 
-        return User.checkAccount( email )
-        
+        return User.checkAccount(email)
+
       }
     },
     dashboardQuickEstimate: {
@@ -574,9 +574,9 @@ const mutation = new GraphQLObjectType({
         estimate: { type: EstimatorInputType }
       },
       async resolve(parentValue, { id, estimate }) {
-        
-        return User.dashboardQuickEstimate( id, estimate )
-        
+
+        return User.dashboardQuickEstimate(id, estimate)
+
       }
     },
     timeEstimate: {
@@ -588,8 +588,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, recentEstimate, estimate }) {
 
-        return Time.timeEstimate( email, recentEstimate, estimate )
-        
+        return Time.timeEstimate(email, recentEstimate, estimate)
+
       }
     },
     timeEstimateLogin: {
@@ -601,8 +601,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, password, estimate }) {
 
-        return Time.timeEstimateLogin( email, password, estimate )
-        
+        return Time.timeEstimateLogin(email, password, estimate)
+
       }
     },
     timeEstimateAutoSend: {
@@ -616,9 +616,9 @@ const mutation = new GraphQLObjectType({
       async resolve(parentValue, { email, token, userID, estimate }) {
 
         jwtMethod.verify(token, process.env.JWT_SECRET_VERIFY)
-        
-        return Time.createTimeEstimate( email, userID, estimate )
-        
+
+        return Time.createTimeEstimate(email, userID, estimate)
+
       }
     },
     noPasswordTimeSignup: {
@@ -629,8 +629,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, estimate }) {
 
-        return Time.noPasswordSignup( email, estimate )
-        
+        return Time.noPasswordSignup(email, estimate)
+
       }
     },
     updateTimeEstimate: {
@@ -641,8 +641,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, estimate }) {
 
-        return Time.updateTimeEstimate( email, estimate )
-        
+        return Time.updateTimeEstimate(email, estimate)
+
       }
     },
     createTimeEstimate: {
@@ -653,9 +653,9 @@ const mutation = new GraphQLObjectType({
         estimate: { type: TimeEstimateInputType }
       },
       async resolve(parentValue, { email, userID, estimate }) {
-        
-        return Time.createTimeEstimate( email, userID, estimate )
-        
+
+        return Time.createTimeEstimate(email, userID, estimate)
+
       }
     },
     deleteTimeEstimate: {
@@ -663,10 +663,10 @@ const mutation = new GraphQLObjectType({
       args: {
         id: { type: GraphQLString }
       },
-      async resolve(parentValue, { id }){
+      async resolve(parentValue, { id }) {
 
-        return Time.deleteTimeEstimate( id )
-        
+        return Time.deleteTimeEstimate(id)
+
       }
     },
     sendTimeEstimate: {
@@ -677,9 +677,9 @@ const mutation = new GraphQLObjectType({
         estimate: { type: TimeEstimateInputType }
       },
       async resolve(parentValue, { email, estimate }) {
-        
-        return Time.sendTimeEstimate( email, estimate )
-        
+
+        return Time.sendTimeEstimate(email, estimate)
+
       }
     },
     forgotPasswordAdmin: {
@@ -687,10 +687,10 @@ const mutation = new GraphQLObjectType({
       args: {
         email: { type: GraphQLString }
       },
-      async resolve(parentValue, { email }){
+      async resolve(parentValue, { email }) {
 
-        return User.forgotPasswordAdmin( email )
-        
+        return User.forgotPasswordAdmin(email)
+
       }
     },
     updatePasswordAdmin: {
@@ -700,21 +700,21 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLString },
         token: { type: GraphQLString }
       },
-      async resolve( parentValue, { newPassword, id, token }){
+      async resolve(parentValue, { newPassword, id, token }) {
 
-        return User.updatePassword( newPassword, id, token )
-        
+        return User.updatePassword(newPassword, id, token)
+
       }
     },
     quickEstimateClient: {
       type: SingleEstimateOutputType,
-      args: { 
+      args: {
         estimate: { type: EstimatorInputType }
       },
-      async resolve(parentValue, { estimate }){
+      async resolve(parentValue, { estimate }) {
 
-        return User.quickEstimateClient( estimate )
-        
+        return User.quickEstimateClient(estimate)
+
       }
     },
     saveEstimate: {
@@ -725,8 +725,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, estimateID }) {
 
-        return User.saveEstimate( email, estimateID )
-        
+        return User.saveEstimate(email, estimateID)
+
       }
     },
     applyGiftCard: {
@@ -739,12 +739,12 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, estimateID, where, why }) {
 
-        return Client.applyGiftCard( estimateID, where, why )
-        
+        return Client.applyGiftCard(estimateID, where, why)
+
       }
     },
 
-  subscribeUser: {
+    subscribeUser: {
       type: GraphQLString,
       args: {
         email: { type: GraphQLString }
@@ -765,7 +765,7 @@ const mutation = new GraphQLObjectType({
           await newSubscription.save();
 
 
-            const params = thankYouForSubscribing(email); // Your email template function
+          const params = thankYouForSubscribing(email); // Your email template function
           const command = new SendEmailCommand(params);
           const response = await ses.send(command);
 
