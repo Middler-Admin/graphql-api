@@ -254,14 +254,23 @@ exports.saveEstimate = (
                       ${cabinetSectionHtml}
                       ${exteriorSectionHtml}
 
-                      <tr>
-                       <td colspan="2" style="padding: 15px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
-                         <p style="margin: 0; font-weight: bold; font-size: 16px; color: #111827;">Terms</p>
-                         <p style="margin: 6px 0 0 0; font-size: 14px; color: #374151;">
-                           Paint Brand: ${paintBrand ? String(paintBrand).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Unknown'}
-                         </p>
-                       </td>
-                     </tr>
+                     <tr>
+                        <td style="padding: 0 20px 30px;">
+                          <table width="100%" cellpadding="0" cellspacing="0" style="border-radius: 10px; background-color: #ffffff; border: 1px solid #ddd;">
+                            <tr>
+                              <td colspan="2" style="background-color: #3366ff; color: #ffffff; padding: 15px; font-size: 18px; font-weight: bold;">
+                                Terms
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 15px; width: 50%; vertical-align: top;">
+                                <p style="margin: 0; font-weight: bold;">Paint Brand:</p>
+                                <p style="margin: 0;">${paintBrand ? String(paintBrand).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Unknown'}</p><br/>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
 
                       <tr><td align="center" style="padding:20px;font-size:12px;color:#999">© 2025 Middler. All rights reserved.</td></tr>
                     </table>

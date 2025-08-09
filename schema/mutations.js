@@ -721,12 +721,15 @@ const mutation = new GraphQLObjectType({
       type: UserType,
       args: {
         email: { type: GraphQLString },
-        estimateID: { type: GraphQLString }
+        // estimateID: { type: GraphQLString }
+        estimateID: { type: GraphQLString },
+        estimate: { type: EstimatorInputType }
       },
-      async resolve(parentValue, { email, estimateID }) {
-
-        return User.saveEstimate(email, estimateID)
-
+      // async resolve(parentValue, { email, estimateID }) {
+      //   return User.saveEstimate(email, estimateID)
+      // }
+      async resolve(parentValue, { email, estimateID, estimate }) {
+        return User.saveEstimate(email, estimateID, estimate)
       }
     },
     applyGiftCard: {
