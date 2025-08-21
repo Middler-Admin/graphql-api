@@ -1,7 +1,7 @@
 exports.thankYouForSubscribing = (email) => {
   return {
     // Source: `Middler <codecallogic@gmail.com>`,
-    Source: `Middler <support@middler.com>`,
+    Source: `Middler <codecallogic@gmail.com>`,
     Destination: {
       ToAddresses: [email],
     },
