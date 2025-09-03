@@ -19,15 +19,15 @@ const SALT_ROUNDS = 6;
 const jwtMethod = require('jsonwebtoken')
 
 //// SES
-const config = {
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  },
-  region: process.env.AWS_REGION
-}
+// const config = {
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+//   },
+//   region: process.env.AWS_REGION
+// }
 
-const ses = new SESClient(config)
+// const ses = new SESClient(config)
 
 //// STRIPE
 const stripe = require('stripe')(process.env.NODE_ENV === 'development' ? process.env.STRIPE_TEST_SECRET_KEY : process.env.STRIPE_LIVE_SECRET_KEY)
