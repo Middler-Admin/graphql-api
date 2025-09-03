@@ -10,7 +10,6 @@
   "author": "Middler",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.577.0",
     "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -24,7 +23,8 @@
     "openai": "^4.70.2",
     "stripe": "^16.8.0",
     "uid": "^2.0.2",
-    "zipcodes": "^8.0.0"
+    "zipcodes": "^8.0.0",
+    "@sendgrid/mail": "^8.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

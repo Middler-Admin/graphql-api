@@ -1,5 +1,5 @@
 const { GraphQLError } = require('graphql')
-const { sendEmail } = require('../helpers/mailer')
+const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses")
 const mongoose = require('mongoose')
 const jwtMethod = require('jsonwebtoken')
 const Schema = mongoose.Schema
@@ -243,8 +243,8 @@ Time.statics.timeEstimate = async function (emailDestination, recentEstimate, es
         user.verificationCode
       )
 
-      const commandPass = paramsPass
-      const responsePass = await sendEmail(commandPass)
+      const commandPass = new SendEmailCommand(paramsPass)
+      const responsePass = await ses.send(commandPass)
 
       message = 'Estimates sent as well as temporary password email'
 
@@ -279,8 +279,8 @@ Time.statics.timeEstimate = async function (emailDestination, recentEstimate, es
         estimate.clientPhone,
         estimate.clientName
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log('TIME ESTIMATE EMAIL', response)
     }
@@ -302,8 +302,8 @@ Time.statics.timeEstimate = async function (emailDestination, recentEstimate, es
         estimate.clientPhone,
         estimate.clientName
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log('TIME ESTIMATE EMAIL', response)
     }
@@ -466,8 +466,8 @@ Time.statics.timeEstimateLogin = async function (emailDestination, password, est
       //     estimate.clientPhone,
       //     estimate.clientName
       //   )
-      //   const command = params)
-      //   const response = await sendEmail(command)
+      //   const command   = new SendEmailCommand(params)
+      //   const response  = await ses.send(command)
 
       //   console.log(response)
       // }
@@ -489,7 +489,8 @@ Time.statics.timeEstimateLogin = async function (emailDestination, password, est
       //     estimate.clientPhone,
       //     estimate.clientName
       //   )
-      //   const command = params//   const response = await sendEmail(command)
+      //   const command   = new SendEmailCommand(params)
+      //   const response  = await ses.send(command)
 
       //   console.log(response)
       // }
@@ -585,8 +586,8 @@ Time.statics.updateTimeEstimate = async function (emailDestination, estimate) {
         estimate.clientPhone,
         estimate.clientName
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -696,8 +697,8 @@ Time.statics.createTimeEstimate = async function (emailDestination, userID, esti
         estimate.clientPhone,
         estimate.clientName
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -838,8 +839,8 @@ Time.statics.timeEstimateAutoSend = async function (emailDestination, userID, es
         estimate.clientPhone,
         estimate.clientName
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -861,8 +862,8 @@ Time.statics.timeEstimateAutoSend = async function (emailDestination, userID, es
         estimate.clientPhone,
         estimate.clientName
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -924,8 +925,8 @@ Time.statics.noPasswordSignup = async function (email, estimate) {
     const user = await new User({ ...userObject }).save()
 
     const params = noPasswordEmailVerification(email.toLowerCase(), pin)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
 
@@ -973,8 +974,8 @@ Time.statics.sendTimeEstimate = async function (emailDestination, estimate) {
         estimate.clientPhone,
         estimate.clientName
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }

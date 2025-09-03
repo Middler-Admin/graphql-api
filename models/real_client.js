@@ -1,5 +1,5 @@
 const { GraphQLError } = require('graphql')
-const { sendEmail } = require('../helpers/mailer')
+const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses")
 const { totalEstimate, totalEstimateAdjusted, calculateInteriorGallonsCost, calculateExteriorGallonsCost, calculateCabinetsGallonsCost } = require('../helpers/calculation')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
@@ -13,7 +13,7 @@ const config = {
   region: process.env.AWS_REGION
 }
 
-// const ses = new SESClient(config)
+const ses = new SESClient(config)
 
 //// EMAIL TEMPLATES
 const { sendEstimateSimple } = require('../templates/sendEstimateSimple')
@@ -267,7 +267,7 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
 
   try {
 
-    const User = require('../models/user')
+    const User = require('./real_user')
     const user = await User.findById(userID)
     const estimate = await this.findById(clientID)
 
@@ -291,8 +291,8 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
         estimate.clientPropertyAddress,
         estimate.notesAndDisclosure ? estimate.notesAndDisclosure : ''
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -327,8 +327,8 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
         estimate.exteriorItems,
         estimate.exteriorIndividualItems
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
 
@@ -370,8 +370,8 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
         estimate.dropCloths
       )
 
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
 
@@ -422,8 +422,8 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
         estimate.plasticRolls,
         estimate.dropCloths
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -537,7 +537,7 @@ Client.statics.deleteEstimate = async function (id) {
 
   try {
 
-    const User = require('../models/user')
+    const User = require('./real_user')
     User.updateMany({ clients: id }, { $pull: { clients: id } }).exec()
 
     const deleteClient = await this.findByIdAndDelete(id)
@@ -560,7 +560,7 @@ Client.statics.getEstimate = async function (id, painter) {
   try {
 
     const estimate = await this.findById(id)
-    const User = require('../models/user')
+    const User = require('./real_user')
     const user = await User.findById(painter)
 
     return {

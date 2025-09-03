@@ -1,8 +1,8 @@
 const graphql = require('graphql');
-const { sendEmail } = require('../helpers/mailer')
 const { GraphQLError } = require('graphql')
 const { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInt, GraphQLBoolean } = graphql;
 const jwtMethod = require('jsonwebtoken')
+const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses")
 
 const config = {
   credentials: {
@@ -769,8 +769,8 @@ const mutation = new GraphQLObjectType({
 
 
           const params = thankYouForSubscribing(email); // Your email template function
-          const command = params;
-const response = await sendEmail(command);
+          const command = new SendEmailCommand(params);
+          const response = await ses.send(command);
 
           console.log('Subscription confirmation email sent:', response);
 

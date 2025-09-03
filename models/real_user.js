@@ -1,6 +1,6 @@
 require('dotenv').config()
 const { GraphQLError } = require('graphql')
-const { sendEmail } = require('../helpers/mailer')
+const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses")
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const aws = require('aws-sdk')
@@ -232,8 +232,8 @@ UserSchema.statics.signup = async function (firstName, lastName, email, password
     const user = await new this({ ...object }).save()
 
     const params = verifyEmail(email.toLowerCase(), firstName, lastName, pin)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
 
@@ -289,8 +289,8 @@ UserSchema.statics.noPasswordSignup = async function (email, estimate) {
     const user = await new this({ ...userObject }).save()
 
     const params = noPasswordEmailVerification(email.toLowerCase(), pin)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
 
@@ -413,8 +413,8 @@ UserSchema.statics.firstEstimate = async function (email, estimate) {
     const user = await new this({ ...userObject }).save()
 
     const params = verifyEmail(email.toLowerCase(), estimate.estimatorName ? estimate.estimatorName : `${user.firstName} ${user.lastName}`, estimate.estimatorName ? null : user.lastName, pin)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
 
     return { message: `Enter the verification code we sent to ${email}` }
@@ -465,8 +465,8 @@ UserSchema.statics.verifyEmail = async function (checkID, token) {
     if (!checkUser.password) {
 
       const paramsPass = tempPasswordTwo(user.email, newTempPassword)
-      const commandPass = paramsPass;
-      const responsePass = await sendEmail(commandPass);
+      const commandPass = new SendEmailCommand(paramsPass);
+      const responsePass = await ses.send(commandPass);
 
       console.log('PASSWORD', responsePass)
 
@@ -551,8 +551,8 @@ UserSchema.statics.pinEmailVerification = async function (pin, email) {
     if (!checkUser.password) {
 
       const paramsPass = tempPasswordTwo(checkUser.email, checkUser.verificationCode)
-      const commandPass = paramsPass
-      const responsePass = await sendEmail(commandPass)
+      const commandPass = new SendEmailCommand(paramsPass)
+      const responsePass = await ses.send(commandPass)
 
       checkUser.password = checkUser.verificationCode
       checkUser.save()
@@ -579,6 +579,7 @@ UserSchema.statics.pinEmailVerification = async function (pin, email) {
         code: ERROR_CODE,
       },
     });
+
   }
 
 }
@@ -600,8 +601,8 @@ UserSchema.statics.sendVerificationEmail = async function (email, clientId) {
     const tokenVerify = jwtMethod.sign({ id: user._id, email: email }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '48hr', algorithm: 'HS256' })
 
     const paramsVerify = verifyEmailTwo(email.toLowerCase(), user.estimatorName, 'https://middler.com', tokenVerify, clientId)
-    const commandVerify = paramsVerify;
-    const responseVerify = await sendEmail(commandVerify);
+    const commandVerify = new SendEmailCommand(paramsVerify);
+    const responseVerify = await ses.send(commandVerify);
 
     console.log('VERIFY EMAIL', responseVerify)
 
@@ -646,8 +647,8 @@ UserSchema.statics.newPinVerification = async function (email) {
     }
 
     const params = verifyEmail(email.toLowerCase(), checkUser.firstName ? checkUser.firstName : checkUser.estimatorName, checkUser.lastName, pin)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
 
@@ -934,8 +935,8 @@ UserSchema.statics.updatePersonalInformation = async function (id, firstName, la
     if (checkUser.email !== email) {
 
       const params = verifyEmail(email, firstName, lastName, pin)
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       checkUser.emailVerified = false
       checkUser.emailVerifiedStamp = new Date().toISOString()
@@ -1132,8 +1133,8 @@ UserSchema.statics.forgotPassword = async function (email) {
     const token = jwtMethod.sign({ id: user._id }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '1hr', algorithm: 'HS256' })
 
     const params = forgotPassword(email, 'https://middler.com', token)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     return { message: `Reset password email sent to ${email}` }
 
@@ -1189,8 +1190,8 @@ UserSchema.statics.contactMiddler = async function (email, message) {
   try {
 
     const params = contactMiddler(email, message)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
 
@@ -1538,8 +1539,8 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         user.verificationCode
       )
 
-      const commandPass = paramsPass
-      const responsePass = await sendEmail(commandPass)
+      const commandPass = new SendEmailCommand(paramsPass)
+      const responsePass = await ses.send(commandPass)
 
       message = 'Estimates sent as well as temporary password email'
 
@@ -1616,8 +1617,8 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -1688,8 +1689,8 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -1759,8 +1760,8 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -1830,8 +1831,8 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -2054,8 +2055,8 @@ UserSchema.statics.sqftEstimateLogin = async function (email, password, estimate
       //     clientObject.plasticRolls,
       //     clientObject.dropCloths
       //   )
-      //   const command = params)
-      //   const response = await sendEmail(command)
+      //   const command   = new SendEmailCommand(params)
+      //   const response  = await ses.send(command)
 
       //   console.log(response)
       // }
@@ -2126,7 +2127,8 @@ UserSchema.statics.sqftEstimateLogin = async function (email, password, estimate
       //     clientObject.plasticRolls,
       //     clientObject.dropCloths
       //   )
-      //   const command = params//   const response = await sendEmail(command)
+      //   const command   = new SendEmailCommand(params)
+      //   const response  = await ses.send(command)
 
       //   console.log(response)
       // }
@@ -2326,8 +2328,8 @@ UserSchema.statics.dashboardQuickEstimate = async function (id, estimate) {
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -2397,8 +2399,8 @@ UserSchema.statics.dashboardQuickEstimate = async function (id, estimate) {
         clientObject.plasticRolls,
         clientObject.dropCloths
       )
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
     }
@@ -2608,8 +2610,8 @@ UserSchema.statics.checkAccount = async function (email) {
     const user = await new this({ ...userObject }).save()
 
     const params = verifyEmail(email.toLowerCase(), 'user', user.lastName, pin)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
 
@@ -2643,8 +2645,8 @@ UserSchema.statics.forgotPasswordAdmin = async function (email) {
     const token = jwtMethod.sign({ id: user._id }, 'cGi4DH1HvpZRos4my9m2VYsc7hIjbR0Fi0J7el3K', { expiresIn: '1hr', algorithm: 'HS256' })
 
     const params = forgotPassword(email, 'https://admin.middler.com', token)
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     return { message: `Reset password email sent to ${email}` }
 
@@ -2998,8 +3000,8 @@ UserSchema.statics.saveEstimate = async function (email, estimateID, estimate) {
         clientObject.dropCloths
       )
 
-      const command = params
-      const response = await sendEmail(command)
+      const command = new SendEmailCommand(params)
+      const response = await ses.send(command)
 
       console.log(response)
 
@@ -3091,8 +3093,8 @@ UserSchema.statics.saveEstimate = async function (email, estimateID, estimate) {
       clientObject.dropCloths
     )
 
-    const command = params
-    const response = await sendEmail(command)
+    const command = new SendEmailCommand(params)
+    const response = await ses.send(command)
 
     console.log(response)
 
@@ -3110,4 +3112,5 @@ UserSchema.statics.saveEstimate = async function (email, estimateID, estimate) {
 }
 
 const User = mongoose.model('User', UserSchema);
+
 module.exports = User
