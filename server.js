@@ -10,7 +10,7 @@ const app = express()
 //// STRIPE
 const stripe = require('stripe')(process.env.NODE_ENV === 'development' ? process.env.STRIPE_TEST_SECRET_KEY : process.env.STRIPE_LIVE_SECRET_KEY)
 
-require('dotenv').config()
+require('dotenv').config() 
 
 // Use the routes, which will have the path `/stripe-webhook` directly
 app.use(stripeWebhookRoutes)
