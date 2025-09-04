@@ -18,7 +18,7 @@ exports.sendEstimateSimple = (
   notesAndDisclosures
 ) => {
   return {
-    Source: `Middler <estimate@middler.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
     },
@@ -166,20 +166,20 @@ exports.sendEstimateSimple = (
                       width: 100% !important;
                       -webkit-font-smoothing: antialiased;
                   }
-          
+
                   * {
                       -ms-text-size-adjust: 100%;
                   }
-          
+
                   #outlook a {
                       padding: 0;
                   }
-          
+
                   .ReadMsgBody,
                   .ExternalClass {
                       width: 100%;
                   }
-          
+
                   .ExternalClass,
                   .ExternalClass p,
                   .ExternalClass td,
@@ -188,7 +188,7 @@ exports.sendEstimateSimple = (
                   .ExternalClass font {
                       line-height: 100%;
                   }
-          
+
                   table,
                   td,
                   th {
@@ -196,17 +196,17 @@ exports.sendEstimateSimple = (
                       mso-table-rspace: 0 !important;
                       border-collapse: collapse;
                   }
-          
+
                   u + .body table, u + .body td, u + .body th {
                       will-change: transform;
                   }
-          
+
                   body, td, th, p, div, li, a, span {
                       -webkit-text-size-adjust: 100%;
                       -ms-text-size-adjust: 100%;
                       mso-line-height-rule: exactly;
                   }
-          
+
                   img {
                       border: 0;
                       outline: 0;
@@ -214,26 +214,26 @@ exports.sendEstimateSimple = (
                       text-decoration: none;
                       -ms-interpolation-mode: bicubic;
                   }
-          
+
                   a[x-apple-data-detectors] {
                       color: inherit !important;
                       text-decoration: none !important;
                   }
-          
+
                   .pc-gmail-fix {
                       display: none;
                       display: none !important;
                   }
-          
+
                   .body .pc-project-body {
                       background-color: transparent !important;
                   }
-          
+
                   @media (min-width: 621px) {
                       .pc-lg-hide {
                           display: none;
-                      } 
-          
+                      }
+
                       .pc-lg-bg-img-hide {
                           background-image: none !important;
                       }
@@ -296,13 +296,13 @@ exports.sendEstimateSimple = (
           .pc-w620-height-1 {height: 1px !important;}
           .pc-w620-itemsSpacings-0-24 {padding-left: 0px !important;padding-right: 0px !important;padding-top: 12px !important;padding-bottom: 12px !important;}
           .pc-w620-valign-middle {vertical-align: middle !important;}
-          
+
           .pc-w620-width-hug {width: auto !important;}
           .pc-w620-width-140 {width: 140px !important;}
           .pc-w620-itemsSpacings-40-0 {padding-left: 20px !important;padding-right: 20px !important;padding-top: 0px !important;padding-bottom: 0px !important;}
           .pc-w620-itemsSpacings-10-0 {padding-left: 5px !important;padding-right: 5px !important;padding-top: 0px !important;padding-bottom: 0px !important;}
           .pc-w620-padding-32-32-32-32 {padding: 32px 32px 32px 32px !important;}
-          
+
           .pc-w620-gridCollapsed-1 > tbody,.pc-w620-gridCollapsed-1 > tbody > tr,.pc-w620-gridCollapsed-1 > tr {display: inline-block !important;}
           .pc-w620-gridCollapsed-1.pc-width-fill > tbody,.pc-w620-gridCollapsed-1.pc-width-fill > tbody > tr,.pc-w620-gridCollapsed-1.pc-width-fill > tr {width: 100% !important;}
           .pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody > tr,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tr {width: 100% !important;}
@@ -311,12 +311,12 @@ exports.sendEstimateSimple = (
           .pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody > tr > td,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tr > td {width: 100% !important;}
           .pc-w620-gridCollapsed-1 > tbody > .pc-grid-tr-first > .pc-grid-td-first,pc-w620-gridCollapsed-1 > .pc-grid-tr-first > .pc-grid-td-first {padding-top: 0 !important;}
           .pc-w620-gridCollapsed-1 > tbody > .pc-grid-tr-last > .pc-grid-td-last,pc-w620-gridCollapsed-1 > .pc-grid-tr-last > .pc-grid-td-last {padding-bottom: 0 !important;}
-          
+
           .pc-w620-gridCollapsed-0 > tbody > .pc-grid-tr-first > td,.pc-w620-gridCollapsed-0 > .pc-grid-tr-first > td {padding-top: 0 !important;}
           .pc-w620-gridCollapsed-0 > tbody > .pc-grid-tr-last > td,.pc-w620-gridCollapsed-0 > .pc-grid-tr-last > td {padding-bottom: 0 !important;}
           .pc-w620-gridCollapsed-0 > tbody > tr > .pc-grid-td-first,.pc-w620-gridCollapsed-0 > tr > .pc-grid-td-first {padding-left: 0 !important;}
           .pc-w620-gridCollapsed-0 > tbody > tr > .pc-grid-td-last,.pc-w620-gridCollapsed-0 > tr > .pc-grid-td-last {padding-right: 0 !important;}
-          
+
           .pc-w620-tableCollapsed-1 > tbody,.pc-w620-tableCollapsed-1 > tbody > tr,.pc-w620-tableCollapsed-1 > tr {display: block !important;}
           .pc-w620-tableCollapsed-1.pc-width-fill > tbody,.pc-w620-tableCollapsed-1.pc-width-fill > tbody > tr,.pc-w620-tableCollapsed-1.pc-width-fill > tr {width: 100% !important;}
           .pc-w620-tableCollapsed-1.pc-w620-width-fill > tbody,.pc-w620-tableCollapsed-1.pc-w620-width-fill > tbody > tr,.pc-w620-tableCollapsed-1.pc-w620-width-fill > tr {width: 100% !important;}
@@ -528,11 +528,10 @@ exports.sendEstimateSimple = (
                                                   <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                                                   <tr>
                                                     <td align="center" valign="top">
-                                                    <img src=${
-                                                      businessLogo
-                                                        ? businessLogo
-                                                        : `${clientURL}/assets/templogoclient.png`
-                                                    }
+                                                    <img src=${businessLogo
+              ? businessLogo
+              : `${clientURL}/assets/templogoclient.png`
+            }
                                                     class="" width="200" height="auto" alt="" style="display: block; outline: 0; line-height: 100%; -ms-interpolation-mode: bicubic; width:100%; height: auto; border: 0;" />
                                                     </td>
                                                   </tr>

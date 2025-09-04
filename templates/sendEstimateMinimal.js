@@ -34,7 +34,7 @@ exports.sendEstimateMinimal = (
   dropCloths
 ) => {
   return {
-    Source: `Middler <estimate@middler.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
     },
@@ -248,7 +248,7 @@ exports.sendEstimateMinimal = (
                   @media (min-width: 621px) {
                       .pc-lg-hide {
                           display: none;
-                      } 
+                      }
 
                       .pc-lg-bg-img-hide {
                           background-image: none !important;
@@ -595,7 +595,7 @@ exports.sendEstimateMinimal = (
                             </td>
                           </tr>
                           </table>
-                          
+
                           <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
                             <td>
@@ -767,7 +767,7 @@ exports.sendEstimateMinimal = (
                                           </tr>
                                         </table>
                                       </td>
-                                    </tr>                                                                        
+                                    </tr>
                                   </table>
                                   </td>
                                 </tr>
@@ -778,7 +778,7 @@ exports.sendEstimateMinimal = (
                             </td>
                           </tr>
                           </table>
-                          
+
                         </td>
                         </tr>
                       </table>
@@ -850,7 +850,7 @@ exports.sendEstimateMinimal = (
                                   </table>
                                 </td>
                               </tr>
-                            </table>                            
+                            </table>
                             </td>
                           </tr>
                           </table>

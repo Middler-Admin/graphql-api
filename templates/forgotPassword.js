@@ -1,6 +1,6 @@
 exports.forgotPassword = (email, url, token) => {
   return {
-    Source: `Middler <estimate@middler.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
     },

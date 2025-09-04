@@ -1,6 +1,6 @@
 exports.noPasswordEmailVerification = (email, pin) => {
   return {
-    Source: `Middler <estimate@middler.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
     },
@@ -794,10 +794,10 @@ exports.noPasswordEmailVerification = (email, pin) => {
                                                             "
                                                             >You must authorize this email
                                                             address for use with Middler.
-                                                            To complete the verification process, 
-                                                            please use the following 6-digit code. 
-                                                            This code is valid for the next 15 minutes. 
-                                                            If you did not request this code, 
+                                                            To complete the verification process,
+                                                            please use the following 6-digit code.
+                                                            This code is valid for the next 15 minutes.
+                                                            If you did not request this code,
                                                             please disregard this email.
                                                             Once the email is authorized you will
                                                             have access to your estimates.</span

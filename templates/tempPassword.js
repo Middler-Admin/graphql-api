@@ -1,6 +1,6 @@
 exports.tempPassword = (email, name, password) => {
   return {
-    Source: `Middler <estimate@middler.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
     },
@@ -44,20 +44,20 @@ exports.tempPassword = (email, name, password) => {
                       width: 100% !important;
                       -webkit-font-smoothing: antialiased;
                   }
-          
+
                   * {
                       -ms-text-size-adjust: 100%;
                   }
-          
+
                   #outlook a {
                       padding: 0;
                   }
-          
+
                   .ReadMsgBody,
                   .ExternalClass {
                       width: 100%;
                   }
-          
+
                   .ExternalClass,
                   .ExternalClass p,
                   .ExternalClass td,
@@ -66,7 +66,7 @@ exports.tempPassword = (email, name, password) => {
                   .ExternalClass font {
                       line-height: 100%;
                   }
-          
+
                   table,
                   td,
                   th {
@@ -74,17 +74,17 @@ exports.tempPassword = (email, name, password) => {
                       mso-table-rspace: 0 !important;
                       border-collapse: collapse;
                   }
-          
+
                   u + .body table, u + .body td, u + .body th {
                       will-change: transform;
                   }
-          
+
                   body, td, th, p, div, li, a, span {
                       -webkit-text-size-adjust: 100%;
                       -ms-text-size-adjust: 100%;
                       mso-line-height-rule: exactly;
                   }
-          
+
                   img {
                       border: 0;
                       outline: 0;
@@ -92,22 +92,22 @@ exports.tempPassword = (email, name, password) => {
                       text-decoration: none;
                       -ms-interpolation-mode: bicubic;
                   }
-          
+
                   a[x-apple-data-detectors] {
                       color: inherit !important;
                       text-decoration: none !important;
                   }
-          
+
                   .pc-gmail-fix {
                       display: none;
                       display: none !important;
                   }
-          
+
                   @media (min-width: 621px) {
                       .pc-lg-hide {
                           display: none;
-                      } 
-          
+                      }
+
                       .pc-lg-bg-img-hide {
                           background-image: none !important;
                       }
@@ -193,7 +193,7 @@ exports.tempPassword = (email, name, password) => {
           td.pc-w620-spacing-0-0-20-0,th.pc-w620-spacing-0-0-20-0{margin: 0 !important;padding: 0px 0px 20px 0px !important;}
           .pc-w620-itemsSpacings-20-0 {padding-left: 10px !important;padding-right: 10px !important;padding-top: 0px !important;padding-bottom: 0px !important;}
           .pc-w620-padding-35-35-35-35 {padding: 35px 35px 35px 35px !important;}
-          
+
           .pc-w620-gridCollapsed-1 > tbody,.pc-w620-gridCollapsed-1 > tbody > tr,.pc-w620-gridCollapsed-1 > tr {display: inline-block !important;}
           .pc-w620-gridCollapsed-1.pc-width-fill > tbody,.pc-w620-gridCollapsed-1.pc-width-fill > tbody > tr,.pc-w620-gridCollapsed-1.pc-width-fill > tr {width: 100% !important;}
           .pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody > tr,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tr {width: 100% !important;}
@@ -202,12 +202,12 @@ exports.tempPassword = (email, name, password) => {
           .pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody > tr > td,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tr > td {width: 100% !important;}
           .pc-w620-gridCollapsed-1 > tbody > .pc-grid-tr-first > .pc-grid-td-first,pc-w620-gridCollapsed-1 > .pc-grid-tr-first > .pc-grid-td-first {padding-top: 0 !important;}
           .pc-w620-gridCollapsed-1 > tbody > .pc-grid-tr-last > .pc-grid-td-last,pc-w620-gridCollapsed-1 > .pc-grid-tr-last > .pc-grid-td-last {padding-bottom: 0 !important;}
-          
+
           .pc-w620-gridCollapsed-0 > tbody > .pc-grid-tr-first > td,.pc-w620-gridCollapsed-0 > .pc-grid-tr-first > td {padding-top: 0 !important;}
           .pc-w620-gridCollapsed-0 > tbody > .pc-grid-tr-last > td,.pc-w620-gridCollapsed-0 > .pc-grid-tr-last > td {padding-bottom: 0 !important;}
           .pc-w620-gridCollapsed-0 > tbody > tr > .pc-grid-td-first,.pc-w620-gridCollapsed-0 > tr > .pc-grid-td-first {padding-left: 0 !important;}
           .pc-w620-gridCollapsed-0 > tbody > tr > .pc-grid-td-last,.pc-w620-gridCollapsed-0 > tr > .pc-grid-td-last {padding-right: 0 !important;}
-          
+
           .pc-w620-tableCollapsed-1 > tbody,.pc-w620-tableCollapsed-1 > tbody > tr,.pc-w620-tableCollapsed-1 > tr {display: block !important;}
           .pc-w620-tableCollapsed-1.pc-width-fill > tbody,.pc-w620-tableCollapsed-1.pc-width-fill > tbody > tr,.pc-w620-tableCollapsed-1.pc-width-fill > tr {width: 100% !important;}
           .pc-w620-tableCollapsed-1.pc-w620-width-fill > tbody,.pc-w620-tableCollapsed-1.pc-w620-width-fill > tbody > tr,.pc-w620-tableCollapsed-1.pc-w620-width-fill > tr {width: 100% !important;}

@@ -33,7 +33,7 @@ exports.sendEstimateDetailed = (
   dropCloths
 ) => {
   return {
-    Source: `Middler <estimate@middler.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
     },
@@ -247,7 +247,7 @@ exports.sendEstimateDetailed = (
                   @media (min-width: 621px) {
                       .pc-lg-hide {
                           display: none;
-                      } 
+                      }
 
                       .pc-lg-bg-img-hide {
                           background-image: none !important;
@@ -409,11 +409,10 @@ exports.sendEstimateDetailed = (
                                                   <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                                                   <tr>
                                                     <td align="center" valign="top">
-                                                      <img src=${
-                                                        businessLogo
-                                                          ? businessLogo
-                                                          : `${clientURL}/assets/templogoclient.png`
-                                                      }
+                                                      <img src=${businessLogo
+              ? businessLogo
+              : `${clientURL}/assets/templogoclient.png`
+            }
                                                         class="" width="200" height="auto" alt="" style="display: block; outline: 0; line-height: 100%; -ms-interpolation-mode: bicubic; width:100%; height: auto; border: 0;" />
                                                     </td>
                                                   </tr>
@@ -946,9 +945,9 @@ exports.sendEstimateDetailed = (
                                                   <table class="pc-width-fill pc-w620-tableCollapsed-0" border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="border-collapse: separate; border-spacing: 0; width: 100%;">
                                                     <tbody>
                                                       ${interiorItems
-                                                        .map(
-                                                          (item) =>
-                                                            `<tr
+              .map(
+                (item) =>
+                  `<tr
                                                             align="center"
                                                             valign="top"
                                                           >
@@ -986,9 +985,9 @@ exports.sendEstimateDetailed = (
                                                             </td>
                                                           </tr>
                                                         `
-                                                        )
-                                                        .join('')}
-                                                    
+              )
+              .join('')}
+
                                                     </tbody>
                                                   </table>
                                                   </td>
@@ -1028,8 +1027,8 @@ exports.sendEstimateDetailed = (
                                                   <table class="pc-width-fill pc-w620-tableCollapsed-0" border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="border-collapse: separate; border-spacing: 0; width: 100%;">
                                                     <tbody>
                                                       ${interiorIndividualItems
-                                                        .map(
-                                                          (item) => `
+              .map(
+                (item) => `
                                                           <tr
                                                             align="center"
                                                             valign="top"
@@ -1070,8 +1069,8 @@ exports.sendEstimateDetailed = (
                                                             </td>
                                                           </tr>
                                                         `
-                                                        )
-                                                        .join('')}
+              )
+              .join('')}
                                                     </tbody>
                                                   </table>
                                                   </td>
@@ -1209,8 +1208,8 @@ exports.sendEstimateDetailed = (
                                                   <table class="pc-width-fill pc-w620-tableCollapsed-0" border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="border-collapse: separate; border-spacing: 0; width: 100%;">
                                                     <tbody>
                                                       ${exteriorItems
-                                                        .map(
-                                                          (item) => `
+              .map(
+                (item) => `
                                                           <tr
                                                             align="center"
                                                             valign="top"
@@ -1249,8 +1248,8 @@ exports.sendEstimateDetailed = (
                                                             </td>
                                                           </tr>
                                                         `
-                                                        )
-                                                        .join('')}
+              )
+              .join('')}
                                                     </tbody>
                                                   </table>
                                                   </td>
@@ -1290,8 +1289,8 @@ exports.sendEstimateDetailed = (
                                                   <table class="pc-width-fill pc-w620-tableCollapsed-0" border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="border-collapse: separate; border-spacing: 0; width: 100%;">
                                                     <tbody>
                                                       ${exteriorIndividualItems
-                                                        .map(
-                                                          (item) => `
+              .map(
+                (item) => `
                                                           <tr
                                                             align="center"
                                                             valign="top"
@@ -1332,8 +1331,8 @@ exports.sendEstimateDetailed = (
                                                             </td>
                                                           </tr>
                                                         `
-                                                        )
-                                                        .join('')}
+              )
+              .join('')}
                                                     </tbody>
                                                   </table>
                                                   </td>
@@ -1361,7 +1360,7 @@ exports.sendEstimateDetailed = (
                             </td>
                           </tr>
                           </table>
-                          
+
 
 
                           <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
@@ -1791,7 +1790,7 @@ exports.sendEstimateDetailed = (
                               </td>
                           </tr>
                           </table>
-                          
+
                           <tr>
                             <td valign="top">
                             <!-- BEGIN MODULE: Header -->
@@ -1926,7 +1925,7 @@ exports.sendEstimateDetailed = (
                             <!-- END MODULE: Header -->
                             </td>
                           </tr>
-                          
+
                           <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
                             <td>
@@ -2060,7 +2059,7 @@ exports.sendEstimateDetailed = (
                                   </table>
                                 </td>
                               </tr>
-                            </table>                            
+                            </table>
                             </td>
                           </tr>
                           </table>

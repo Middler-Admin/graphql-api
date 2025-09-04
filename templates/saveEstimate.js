@@ -158,7 +158,7 @@ exports.saveEstimate = (
       : '';
 
   return {
-    Source: `Middler <codecallogic@gmail.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
     },

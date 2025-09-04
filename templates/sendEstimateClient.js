@@ -35,7 +35,7 @@ exports.sendEstimateClient = (
     : 'This is a no-reply email. Please contact us via our website or other provided methods.';
 
   return {
-    Source: `Middler <estimate@middler.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
       CcAddresses: ['estimates@middler.com'],
@@ -251,7 +251,7 @@ exports.sendEstimateClient = (
                   @media (min-width: 621px) {
                       .pc-lg-hide {
                           display: none;
-                      } 
+                      }
 
                       .pc-lg-bg-img-hide {
                           background-image: none !important;
@@ -434,7 +434,7 @@ exports.sendEstimateClient = (
                                               <span>Paint Estimates</span>
                                             </div>
                                           </td>
-                                      
+
                                           <!-- Client Address -->
                                           <td align="right" style="padding: 10px;">
                                             <div class="pc-font-alt" style="line-height: 140%; font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 15px; color: #333333; text-align: right;">
@@ -598,7 +598,7 @@ exports.sendEstimateClient = (
                                     <tr>
                                     <td align="left" valign="top">
                                       <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-                                      
+
                                       </table>
                                     </td>
                                     </tr>
@@ -619,7 +619,7 @@ exports.sendEstimateClient = (
                               <tr>
                               <td valign="top" class="pc-w620-padding-0-0-0-0" align="left" style="padding: 0px 30px 0px 10px;">
                                 <div class="pc-font-alt" style="line-height: 140%; letter-spacing: -0px; font-family: 'Poppins', Arial, Helvetica, sans-serif; font-size: 14px; font-weight: normal; font-variant-ligatures: normal; color: #2d2d2f; margin: 15px 0 0 0;">
-                                
+
                                 </div>
                               </td>
                               </tr>
@@ -641,8 +641,8 @@ exports.sendEstimateClient = (
                             </td>
                           </tr>
                           </table>
-                          
-                         
+
+
                           <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
                             <tr>
                             <td>
@@ -714,7 +714,7 @@ exports.sendEstimateClient = (
                                           </tr>
                                         </table>
                                       </td>
-                                    </tr>                                                                        
+                                    </tr>
                                   </table>
                                   </td>
                                 </tr>
@@ -725,7 +725,7 @@ exports.sendEstimateClient = (
                             </td>
                           </tr>
                           </table>
-                          
+
                         </td>
                         </tr>
                       </table>

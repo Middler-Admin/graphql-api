@@ -1,6 +1,6 @@
 exports.verifyEmail = (email, firstName, lastName, pin) => {
   return {
-    Source: `Middler <estimate@middler.com>`,
+    Source: `Middler <info@middler.com>`,
     Destination: {
       ToAddresses: [email],
     },
@@ -792,11 +792,10 @@ exports.verifyEmail = (email, firstName, lastName, pin) => {
                                                               color: #000000;
                                                             "
                                                             >Hello, ${firstName}
-                                                            ${
-                                                              lastName
-                                                                ? lastName
-                                                                : ''
-                                                            }</span
+                                                            ${lastName
+              ? lastName
+              : ''
+            }</span
                                                           >
                                                         </div>
                                                         <div><span>&#xFEFF;</span></div>
@@ -809,10 +808,10 @@ exports.verifyEmail = (email, firstName, lastName, pin) => {
                                                             "
                                                             >You must authorize this email
                                                             address for use with Middler.
-                                                            To complete the verification process, 
-                                                            please use the following 6-digit code. 
-                                                            This code is valid for the next 15 minutes. 
-                                                            If you did not request this code, 
+                                                            To complete the verification process,
+                                                            please use the following 6-digit code.
+                                                            This code is valid for the next 15 minutes.
+                                                            If you did not request this code,
                                                             please disregard this email.
                                                             Once the email is authorized you will
                                                             have access to your estimates.</span

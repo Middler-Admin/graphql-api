@@ -1,22 +1,22 @@
 exports.contactMiddler = (email, message) => {
-  return {
-    Source: `Middler <support@middler.com>`,
-    Destination: {
-      ToAddresses: ['support@middler.com'],
-    },
-    Message: {
-      Subject: {
-        Data: 'User Inquiry',
-        Charset: 'UTF-8',
-      },
-      Body: {
-        Text: {
-          Data: 'Email service from Middler',
-          Charset: 'UTF-8',
+    return {
+        Source: `Middler <info@middler.com>`,
+        Destination: {
+            ToAddresses: ['support@middler.com'],
         },
-        Html: {
-          Charset: 'UTF-8',
-          Data: `
+        Message: {
+            Subject: {
+                Data: 'User Inquiry',
+                Charset: 'UTF-8',
+            },
+            Body: {
+                Text: {
+                    Data: 'Email service from Middler',
+                    Charset: 'UTF-8',
+                },
+                Html: {
+                    Charset: 'UTF-8',
+                    Data: `
           <!DOCTYPE html>
           <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
@@ -218,8 +218,8 @@ exports.contactMiddler = (email, message) => {
 
           </html>
           `,
+                },
+            },
         },
-      },
-    },
-  };
+    };
 };
