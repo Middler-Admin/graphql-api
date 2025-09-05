@@ -19,15 +19,15 @@ const SALT_ROUNDS = 6;
 const jwtMethod = require('jsonwebtoken')
 
 //// SES
-const config = {
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  },
-  region: process.env.AWS_REGION
-}
+// const config = {
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+//   },
+//   region: process.env.AWS_REGION
+// }
 
-const ses = new SESClient(config)
+// const ses = new SESClient(config)
 
 //// STRIPE
 const stripe = require('stripe')(process.env.NODE_ENV === 'development' ? process.env.STRIPE_TEST_SECRET_KEY : process.env.STRIPE_LIVE_SECRET_KEY)
@@ -233,7 +233,7 @@ UserSchema.statics.signup = async function (firstName, lastName, email, password
 
     const params = verifyEmail(email.toLowerCase(), firstName, lastName, pin)
     const command = new SendEmailCommand(params)
-    const response = await ses.send(command)
+    // const response = await ses.send(command)
 
     console.log(response)
 
@@ -290,7 +290,7 @@ UserSchema.statics.noPasswordSignup = async function (email, estimate) {
 
     const params = noPasswordEmailVerification(email.toLowerCase(), pin)
     const command = new SendEmailCommand(params)
-    const response = await ses.send(command)
+    // const response = await ses.send(command)
 
     console.log(response)
 
@@ -414,7 +414,7 @@ UserSchema.statics.firstEstimate = async function (email, estimate) {
 
     const params = verifyEmail(email.toLowerCase(), estimate.estimatorName ? estimate.estimatorName : `${user.firstName} ${user.lastName}`, estimate.estimatorName ? null : user.lastName, pin)
     const command = new SendEmailCommand(params)
-    const response = await ses.send(command)
+    // const response = await ses.send(command)
 
 
     return { message: `Enter the verification code we sent to ${email}` }
@@ -466,7 +466,7 @@ UserSchema.statics.verifyEmail = async function (checkID, token) {
 
       const paramsPass = tempPasswordTwo(user.email, newTempPassword)
       const commandPass = new SendEmailCommand(paramsPass);
-      const responsePass = await ses.send(commandPass);
+      // const responsePass = await ses.send(commandPass);
 
       console.log('PASSWORD', responsePass)
 
@@ -552,7 +552,7 @@ UserSchema.statics.pinEmailVerification = async function (pin, email) {
 
       const paramsPass = tempPasswordTwo(checkUser.email, checkUser.verificationCode)
       const commandPass = new SendEmailCommand(paramsPass)
-      const responsePass = await ses.send(commandPass)
+      // const responsePass = await ses.send(commandPass)
 
       checkUser.password = checkUser.verificationCode
       checkUser.save()
@@ -602,7 +602,7 @@ UserSchema.statics.sendVerificationEmail = async function (email, clientId) {
 
     const paramsVerify = verifyEmailTwo(email.toLowerCase(), user.estimatorName, 'https://middler.com', tokenVerify, clientId)
     const commandVerify = new SendEmailCommand(paramsVerify);
-    const responseVerify = await ses.send(commandVerify);
+    // const responseVerify = await ses.send(commandVerify);
 
     console.log('VERIFY EMAIL', responseVerify)
 
@@ -648,7 +648,7 @@ UserSchema.statics.newPinVerification = async function (email) {
 
     const params = verifyEmail(email.toLowerCase(), checkUser.firstName ? checkUser.firstName : checkUser.estimatorName, checkUser.lastName, pin)
     const command = new SendEmailCommand(params)
-    const response = await ses.send(command)
+    // const response = await ses.send(command)
 
     console.log(response)
 
@@ -936,7 +936,7 @@ UserSchema.statics.updatePersonalInformation = async function (id, firstName, la
 
       const params = verifyEmail(email, firstName, lastName, pin)
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       checkUser.emailVerified = false
       checkUser.emailVerifiedStamp = new Date().toISOString()
@@ -1134,7 +1134,7 @@ UserSchema.statics.forgotPassword = async function (email) {
 
     const params = forgotPassword(email, 'https://middler.com', token)
     const command = new SendEmailCommand(params)
-    const response = await ses.send(command)
+    // const response = await ses.send(command)
 
     return { message: `Reset password email sent to ${email}` }
 
@@ -1191,7 +1191,7 @@ UserSchema.statics.contactMiddler = async function (email, message) {
 
     const params = contactMiddler(email, message)
     const command = new SendEmailCommand(params)
-    const response = await ses.send(command)
+    // const response = await ses.send(command)
 
     console.log(response)
 
@@ -1540,7 +1540,7 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
       )
 
       const commandPass = new SendEmailCommand(paramsPass)
-      const responsePass = await ses.send(commandPass)
+      // const responsePass = await ses.send(commandPass)
 
       message = 'Estimates sent as well as temporary password email'
 
@@ -1618,7 +1618,7 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         clientObject.dropCloths
       )
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       console.log(response)
     }
@@ -1690,7 +1690,7 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         clientObject.dropCloths
       )
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       console.log(response)
     }
@@ -1761,7 +1761,7 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         clientObject.dropCloths
       )
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       console.log(response)
     }
@@ -1832,7 +1832,7 @@ UserSchema.statics.quickEstimate = async function (emailDestination, recentClien
         clientObject.dropCloths
       )
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       console.log(response)
     }

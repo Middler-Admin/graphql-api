@@ -5,15 +5,15 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 //// SES
-const config = {
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  },
-  region: process.env.AWS_REGION
-}
+// const config = {
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+//   },
+//   region: process.env.AWS_REGION
+// }
 
-const ses = new SESClient(config)
+// const ses = new SESClient(config)
 
 //// EMAIL TEMPLATES
 const { sendEstimateSimple } = require('../templates/sendEstimateSimple')
@@ -292,7 +292,7 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
         estimate.notesAndDisclosure ? estimate.notesAndDisclosure : ''
       )
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       console.log(response)
     }
@@ -328,7 +328,7 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
         estimate.exteriorIndividualItems
       )
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       console.log(response)
 
@@ -371,7 +371,7 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
       )
 
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       console.log(response)
 
@@ -423,7 +423,7 @@ Client.statics.sendEstimate = async function (userID, clientID, email, format) {
         estimate.dropCloths
       )
       const command = new SendEmailCommand(params)
-      const response = await ses.send(command)
+      // const response = await ses.send(command)
 
       console.log(response)
     }

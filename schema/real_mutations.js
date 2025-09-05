@@ -4,15 +4,15 @@ const { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInt, GraphQLBoolea
 const jwtMethod = require('jsonwebtoken')
 const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses")
 
-const config = {
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  },
-  region: process.env.AWS_REGION
-}
+// const config = {
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+//   },
+//   region: process.env.AWS_REGION
+// }
 
-const ses = new SESClient(config)
+// const ses = new SESClient(config)
 
 //// TYPES
 const UserType = require('../types/userType')
@@ -770,7 +770,7 @@ const mutation = new GraphQLObjectType({
 
           const params = thankYouForSubscribing(email); // Your email template function
           const command = new SendEmailCommand(params);
-          const response = await ses.send(command);
+          // const response = await ses.send(command);
 
           console.log('Subscription confirmation email sent:', response);
 
