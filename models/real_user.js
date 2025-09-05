@@ -3007,11 +3007,11 @@ UserSchema.statics.saveEstimate = async function (email, estimateID, estimate) {
 
       CODE = 'ACCOUNT_EXISTS'
 
-      throw new GraphQLError(`User with that email already exists estimate saved to account`, {
-        extensions: {
-          code: CODE
-        },
-      })
+      // throw new GraphQLError(`User with that email already exists estimate saved to account`, {
+      //   extensions: {
+      //     code: CODE
+      //   },
+      // })
 
     }
 
