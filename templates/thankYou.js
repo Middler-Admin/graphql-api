@@ -52,6 +52,13 @@ exports.thankYouForSubscribing = (email) => {
                   line-height: 1.5;
                   margin-bottom: 20px;
                 }
+                   .center-text {
+                  text-align: center;
+                  font-size: 18px;
+                  font-weight: bold;
+                  color: #1D42F3;
+                  margin: 20px 0;
+                }
                 .footer {
                   text-align: center;
                   font-size: 12px;
