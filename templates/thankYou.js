@@ -66,7 +66,7 @@ exports.thankYouForSubscribing = (email) => {
                   Thanks for submitting your email on Middler!
                 </div>
                 <div class="email-body">
-                  <p>Enjoy 10% off on your order from Five Star Painting.</p>
+                  <p class="center-text">Enjoy 10% off on your order from Five Star Painting.</p>
                 </div>
                 <div class="footer">
                   <p>If you have any questions, feel free to contact us at <a href="mailto:support@middler.com">support@middler.com</a>.</p>
