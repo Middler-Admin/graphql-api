@@ -55,8 +55,6 @@ exports.thankYouForSubscribing = (email) => {
                    .center-text {
                   text-align: center;
                   font-size: 18px;
-                  font-weight: bold;
-                  color: #1D42F3;
                   margin: 20px 0;
                 }
                 .footer {
